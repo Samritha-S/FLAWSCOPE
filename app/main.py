@@ -52,7 +52,8 @@ def save_uploaded_file(uploaded_file, suffix: str = ".wav") -> str:
 
 def main() -> None:
     st.set_page_config(
-        page_title="FlawScope - Speech Analytics",
+        page_title="FlawScope - Spoken Delivery Analytics",
+        page_icon=":studio_microphone:",
         layout="wide",
         initial_sidebar_state="expanded",
     )

@@ -1,0 +1,1711 @@
+{
+  "summary": {
+    "total_pairs": 10,
+    "total_detected": 52,
+    "total_truth": 19,
+    "overall_precision": 0.269,
+    "overall_recall": 0.737,
+    "overall_f1": 0.394,
+    "spearman_rho": -0.418
+  },
+  "per_type": {
+    "MONOTONE": {
+      "TP": 3,
+      "FP": 1,
+      "FN": 1,
+      "precision": 0.75,
+      "recall": 0.75,
+      "f1": 0.75
+    },
+    "TOO_FAST": {
+      "TP": 2,
+      "FP": 3,
+      "FN": 0,
+      "precision": 0.4,
+      "recall": 1.0,
+      "f1": 0.571
+    },
+    "TOO_SLOW": {
+      "TP": 2,
+      "FP": 1,
+      "FN": 0,
+      "precision": 0.667,
+      "recall": 1.0,
+      "f1": 0.8
+    },
+    "LONG_PAUSE": {
+      "TP": 1,
+      "FP": 0,
+      "FN": 2,
+      "precision": 1.0,
+      "recall": 0.333,
+      "f1": 0.5
+    },
+    "LOW_VOLUME": {
+      "TP": 3,
+      "FP": 3,
+      "FN": 2,
+      "precision": 0.5,
+      "recall": 0.6,
+      "f1": 0.545
+    },
+    "UNCLEAR_ARTICULATION": {
+      "TP": 3,
+      "FP": 30,
+      "FN": 0,
+      "precision": 0.091,
+      "recall": 1.0,
+      "f1": 0.167
+    }
+  },
+  "severity_ladder": {
+    "L0": {
+      "level": 0,
+      "count": 1,
+      "mean_score": 100.0,
+      "std_score": 0.0
+    },
+    "L1": {
+      "level": 1,
+      "count": 1,
+      "mean_score": 90.4,
+      "std_score": 0.0
+    },
+    "L2": {
+      "level": 2,
+      "count": 1,
+      "mean_score": 84.9,
+      "std_score": 0.0
+    },
+    "L3": {
+      "level": 3,
+      "count": 7,
+      "mean_score": 86.91,
+      "std_score": 5.51
+    },
+    "L4": {
+      "level": 4,
+      "count": 1,
+      "mean_score": 72.3,
+      "std_score": 0.0
+    }
+  },
+  "pairs": [
+    {
+      "pair_id": "clip01_L1_mixed",
+      "level": 1,
+      "overall_score": 90.4,
+      "scores": {
+        "overall": 90.4,
+        "pace": 100.0,
+        "intonation": 100.0,
+        "volume": 100.0,
+        "pausing": 100.0,
+        "clarity": 51.9
+      },
+      "detected_count": 6,
+      "truth_count": 1,
+      "detected": [
+        {
+          "id": "F1",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 5.04,
+          "end": 5.76,
+          "word_start_idx": 11,
+          "word_end_idx": 12,
+          "severity": 0.539,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.12,
+          "baseline_value": 0.01,
+          "delta_pct": 1100.0,
+          "z_score": 2.3,
+          "explanation": "Between 5.0 s and 5.8 s ('a proposal') spectral divergence rose to 0.12 MFCC DTW cost vs reference baseline (+1100.0%, z = +2.3). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F2",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 8.42,
+          "end": 11.1,
+          "word_start_idx": 21,
+          "word_end_idx": 26,
+          "severity": 1.0,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.72,
+          "baseline_value": 0.01,
+          "delta_pct": 7100.0,
+          "z_score": 16.98,
+          "explanation": "Between 8.4 s and 11.1 s ('government at Muscle Shoals to work') spectral divergence rose to 0.72 MFCC DTW cost vs reference baseline (+7100.0%, z = +17.0). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F3",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 28.5,
+          "end": 29.1,
+          "word_start_idx": 76,
+          "word_end_idx": 77,
+          "severity": 0.508,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.12,
+          "baseline_value": 0.01,
+          "delta_pct": 1100.0,
+          "z_score": 2.07,
+          "explanation": "Between 28.5 s and 29.1 s ('the incident') spectral divergence rose to 0.12 MFCC DTW cost vs reference baseline (+1100.0%, z = +2.1). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F4",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 29.92,
+          "end": 33.88,
+          "word_start_idx": 80,
+          "word_end_idx": 86,
+          "severity": 0.84,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.19,
+          "baseline_value": 0.01,
+          "delta_pct": 1800.0,
+          "z_score": 4.68,
+          "explanation": "Between 29.9 s and 33.9 s ('reach the entire nation. Next, the Congress') spectral divergence rose to 0.19 MFCC DTW cost vs reference baseline (+1800.0%, z = +4.7). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F5",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 34.46,
+          "end": 36.58,
+          "word_start_idx": 89,
+          "word_end_idx": 93,
+          "severity": 0.948,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.21,
+          "baseline_value": 0.01,
+          "delta_pct": 2000.0,
+          "z_score": 4.21,
+          "explanation": "Between 34.5 s and 36.6 s ('to pass legislation that will') spectral divergence rose to 0.21 MFCC DTW cost vs reference baseline (+2000.0%, z = +4.2). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F6",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 45.82,
+          "end": 47.14,
+          "word_start_idx": 123,
+          "word_end_idx": 126,
+          "severity": 0.609,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.14,
+          "baseline_value": 0.01,
+          "delta_pct": 1300.0,
+          "z_score": 2.77,
+          "explanation": "Between 45.8 s and 47.1 s ('heavily upon millions of') spectral divergence rose to 0.14 MFCC DTW cost vs reference baseline (+1300.0%, z = +2.8). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        }
+      ],
+      "truth": [
+        {
+          "type": "LOW_VOLUME",
+          "start": 28.064,
+          "end": 33.344,
+          "level": 1,
+          "param": "gain_db=-3.0"
+        }
+      ],
+      "matches": []
+    },
+    {
+      "pair_id": "clip01_L2_mixed",
+      "level": 2,
+      "overall_score": 84.9,
+      "scores": {
+        "overall": 84.9,
+        "pace": 96.6,
+        "intonation": 95.0,
+        "volume": 100.0,
+        "pausing": 100.0,
+        "clarity": 34.8
+      },
+      "detected_count": 7,
+      "truth_count": 2,
+      "detected": [
+        {
+          "id": "F1",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 0.0,
+          "end": 5.74,
+          "word_start_idx": 0,
+          "word_end_idx": 12,
+          "severity": 0.874,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.23,
+          "baseline_value": 0.02,
+          "delta_pct": 1050.0,
+          "z_score": 6.23,
+          "explanation": "Between 0.0 s and 5.7 s ('Secondly, I have requested the Congress and have ...') spectral divergence rose to 0.23 MFCC DTW cost vs reference baseline (+1050.0%, z = +6.2). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F2",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 8.42,
+          "end": 11.1,
+          "word_start_idx": 21,
+          "word_end_idx": 26,
+          "severity": 1.0,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.72,
+          "baseline_value": 0.02,
+          "delta_pct": 3500.0,
+          "z_score": 16.79,
+          "explanation": "Between 8.4 s and 11.1 s ('government at Muscle Shoals to work') spectral divergence rose to 0.72 MFCC DTW cost vs reference baseline (+3500.0%, z = +16.8). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F3",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 27.28,
+          "end": 33.56,
+          "word_start_idx": 74,
+          "word_end_idx": 85,
+          "severity": 0.972,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.78,
+          "baseline_value": 0.02,
+          "delta_pct": 3800.0,
+          "z_score": 23.16,
+          "explanation": "Between 27.3 s and 33.6 s ('people, and the incident benefits will reach the ...') spectral divergence rose to 0.78 MFCC DTW cost vs reference baseline (+3800.0%, z = +23.2). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F4",
+          "type": "MONOTONE",
+          "start": 29.1,
+          "end": 30.14,
+          "word_start_idx": 77,
+          "word_end_idx": 80,
+          "severity": 0.704,
+          "metric": "std_f0_st",
+          "unit": "semitones",
+          "participant_value": 2.36,
+          "baseline_value": 5.04,
+          "delta_pct": -53.2,
+          "z_score": -2.36,
+          "explanation": "Between 29.1 s and 30.1 s ('incident benefits will reach') pitch varied by only 2.4 semitones vs 5.0 in the reference (-53.2%, z = -2.4). Flat pitch removes the emphasis cues listeners use to follow the argument.",
+          "recommendation": "Practice exaggerating vocal inflection upward on key verbs and downward on statement endings."
+        },
+        {
+          "id": "F5",
+          "type": "TOO_FAST",
+          "start": 29.14,
+          "end": 29.92,
+          "word_start_idx": 78,
+          "word_end_idx": 79,
+          "severity": 0.642,
+          "metric": "rate_sps",
+          "unit": "syllables/s",
+          "participant_value": 7.33,
+          "baseline_value": 5.33,
+          "delta_pct": 37.5,
+          "z_score": 2.06,
+          "explanation": "Between 29.1 s and 29.9 s ('benefits will') speaking rate accelerated to 7.3 syllables/s vs 5.3 in the reference (+37.5%, z = +2.1). Rushed delivery impairs clarity and prevents listeners from processing the content.",
+          "recommendation": "Slow down cadence on transition words and take deliberate breaths between clauses."
+        },
+        {
+          "id": "F6",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 40.02,
+          "end": 41.0,
+          "word_start_idx": 104,
+          "word_end_idx": 107,
+          "severity": 0.523,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.13,
+          "baseline_value": 0.02,
+          "delta_pct": 550.0,
+          "z_score": 2.34,
+          "explanation": "Between 40.0 s and 41.0 s ('the homeowners of the') spectral divergence rose to 0.13 MFCC DTW cost vs reference baseline (+550.0%, z = +2.3). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F7",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 45.82,
+          "end": 47.14,
+          "word_start_idx": 123,
+          "word_end_idx": 126,
+          "severity": 0.601,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.14,
+          "baseline_value": 0.02,
+          "delta_pct": 600.0,
+          "z_score": 2.72,
+          "explanation": "Between 45.8 s and 47.1 s ('heavily upon millions of') spectral divergence rose to 0.14 MFCC DTW cost vs reference baseline (+600.0%, z = +2.7). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        }
+      ],
+      "truth": [
+        {
+          "type": "LOW_VOLUME",
+          "start": 0.304,
+          "end": 3.216,
+          "level": 2,
+          "param": "gain_db=-6.0"
+        },
+        {
+          "type": "MONOTONE",
+          "start": 28.064,
+          "end": 32.048,
+          "level": 2,
+          "param": "fraction=0.50"
+        }
+      ],
+      "matches": []
+    },
+    {
+      "pair_id": "clip01_L3_mixed",
+      "level": 3,
+      "overall_score": 76.2,
+      "scores": {
+        "overall": 76.2,
+        "pace": 88.5,
+        "intonation": 83.1,
+        "volume": 74.0,
+        "pausing": 100.0,
+        "clarity": 35.9
+      },
+      "detected_count": 8,
+      "truth_count": 4,
+      "detected": [
+        {
+          "id": "F1",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 8.42,
+          "end": 12.24,
+          "word_start_idx": 21,
+          "word_end_idx": 29,
+          "severity": 0.846,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.85,
+          "baseline_value": 0.25,
+          "delta_pct": 240.0,
+          "z_score": 9.27,
+          "explanation": "Between 8.4 s and 12.2 s ('government at Muscle Shoals to work after long ...') spectral divergence rose to 0.85 MFCC DTW cost vs reference baseline (+240.0%, z = +9.3). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F2",
+          "type": "LOW_VOLUME",
+          "start": 11.58,
+          "end": 12.92,
+          "word_start_idx": 28,
+          "word_end_idx": 31,
+          "severity": 0.591,
+          "metric": "rms_db_rel",
+          "unit": "dB",
+          "participant_value": -16.03,
+          "baseline_value": -7.09,
+          "delta_pct": -126.1,
+          "z_score": -1.86,
+          "explanation": "Between 11.6 s and 12.9 s ('long years of wasteful') vocal volume dropped to -16.0 dB vs -7.1 in the reference (-126.1%, drop: 8.9 dB, z = -1.9). Trailing off reduces intelligibility and impact.",
+          "recommendation": "Maintain steady breath support through clause endings to ensure voice projection does not fade."
+        },
+        {
+          "id": "F3",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 23.7,
+          "end": 27.58,
+          "word_start_idx": 60,
+          "word_end_idx": 74,
+          "severity": 0.872,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.66,
+          "baseline_value": 0.25,
+          "delta_pct": 164.0,
+          "z_score": 4.72,
+          "explanation": "Between 23.7 s and 27.6 s ('will add to the comfort and to the ...') spectral divergence rose to 0.66 MFCC DTW cost vs reference baseline (+164.0%, z = +4.7). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F4",
+          "type": "MONOTONE",
+          "start": 23.84,
+          "end": 27.58,
+          "word_start_idx": 61,
+          "word_end_idx": 74,
+          "severity": 0.746,
+          "metric": "std_f0_st",
+          "unit": "semitones",
+          "participant_value": 1.6,
+          "baseline_value": 4.45,
+          "delta_pct": -64.0,
+          "z_score": -3.12,
+          "explanation": "Between 23.8 s and 27.6 s ('add to the comfort and to the happiness ...') pitch varied by only 1.6 semitones vs 4.5 in the reference (-64.0%, z = -3.1). Flat pitch removes the emphasis cues listeners use to follow the argument.",
+          "recommendation": "Practice exaggerating vocal inflection upward on key verbs and downward on statement endings."
+        },
+        {
+          "id": "F5",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 30.36,
+          "end": 36.84,
+          "word_start_idx": 82,
+          "word_end_idx": 94,
+          "severity": 0.969,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 1.46,
+          "baseline_value": 0.25,
+          "delta_pct": 484.0,
+          "z_score": 16.54,
+          "explanation": "Between 30.4 s and 36.8 s ('entire nation. Next, the Congress is about to ...') spectral divergence rose to 1.46 MFCC DTW cost vs reference baseline (+484.0%, z = +16.5). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F6",
+          "type": "TOO_SLOW",
+          "start": 40.88,
+          "end": 44.38,
+          "word_start_idx": 107,
+          "word_end_idx": 110,
+          "severity": 0.525,
+          "metric": "rate_sps",
+          "unit": "syllables/s",
+          "participant_value": 2.16,
+          "baseline_value": 3.8,
+          "delta_pct": -43.2,
+          "z_score": -1.65,
+          "explanation": "Between 40.9 s and 44.4 s ('the nation, by providing') speaking rate dragged at 2.2 syllables/s vs 3.8 in the reference (-43.2%, z = -1.6). Dragging tempo causes energy to drop and risks losing audience engagement.",
+          "recommendation": "Pick up pacing and maintain forward momentum through multi-syllable phrases."
+        },
+        {
+          "id": "F7",
+          "type": "LOW_VOLUME",
+          "start": 40.88,
+          "end": 44.62,
+          "word_start_idx": 107,
+          "word_end_idx": 111,
+          "severity": 1.0,
+          "metric": "rms_db_rel",
+          "unit": "dB",
+          "participant_value": -156.11,
+          "baseline_value": -10.51,
+          "delta_pct": -1385.3,
+          "z_score": -30.06,
+          "explanation": "Between 40.9 s and 44.6 s ('the nation, by providing for') vocal volume dropped to -156.1 dB vs -10.5 in the reference (-1385.3%, drop: 145.6 dB, z = -30.1). Trailing off reduces intelligibility and impact.",
+          "recommendation": "Maintain steady breath support through clause endings to ensure voice projection does not fade."
+        },
+        {
+          "id": "F8",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 40.88,
+          "end": 44.62,
+          "word_start_idx": 107,
+          "word_end_idx": 111,
+          "severity": 0.666,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.55,
+          "baseline_value": 0.25,
+          "delta_pct": 120.0,
+          "z_score": 2.81,
+          "explanation": "Between 40.9 s and 44.6 s ('the nation, by providing for') spectral divergence rose to 0.55 MFCC DTW cost vs reference baseline (+120.0%, z = +2.8). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        }
+      ],
+      "truth": [
+        {
+          "type": "LOW_VOLUME",
+          "start": 10.592,
+          "end": 14.016,
+          "level": 3,
+          "param": "gain_db=-10.0"
+        },
+        {
+          "type": "MONOTONE",
+          "start": 23.232,
+          "end": 28.064,
+          "level": 3,
+          "param": "fraction=0.25"
+        },
+        {
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 32.048,
+          "end": 36.112,
+          "level": 3,
+          "param": "cutoff_hz=2500"
+        },
+        {
+          "type": "LONG_PAUSE",
+          "start": 41.84,
+          "end": 43.44,
+          "level": 3,
+          "param": "pause_s=1.6"
+        }
+      ],
+      "matches": [
+        {
+          "type": "MONOTONE",
+          "iou": 0.774,
+          "detected": {
+            "id": "F4",
+            "type": "MONOTONE",
+            "start": 23.84,
+            "end": 27.58,
+            "word_start_idx": 61,
+            "word_end_idx": 74,
+            "severity": 0.746,
+            "metric": "std_f0_st",
+            "unit": "semitones",
+            "participant_value": 1.6,
+            "baseline_value": 4.45,
+            "delta_pct": -64.0,
+            "z_score": -3.12,
+            "explanation": "Between 23.8 s and 27.6 s ('add to the comfort and to the happiness ...') pitch varied by only 1.6 semitones vs 4.5 in the reference (-64.0%, z = -3.1). Flat pitch removes the emphasis cues listeners use to follow the argument.",
+            "recommendation": "Practice exaggerating vocal inflection upward on key verbs and downward on statement endings."
+          },
+          "truth": {
+            "type": "MONOTONE",
+            "start": 23.232,
+            "end": 28.064,
+            "level": 3,
+            "param": "fraction=0.25"
+          }
+        },
+        {
+          "type": "LOW_VOLUME",
+          "iou": 0.391,
+          "detected": {
+            "id": "F2",
+            "type": "LOW_VOLUME",
+            "start": 11.58,
+            "end": 12.92,
+            "word_start_idx": 28,
+            "word_end_idx": 31,
+            "severity": 0.591,
+            "metric": "rms_db_rel",
+            "unit": "dB",
+            "participant_value": -16.03,
+            "baseline_value": -7.09,
+            "delta_pct": -126.1,
+            "z_score": -1.86,
+            "explanation": "Between 11.6 s and 12.9 s ('long years of wasteful') vocal volume dropped to -16.0 dB vs -7.1 in the reference (-126.1%, drop: 8.9 dB, z = -1.9). Trailing off reduces intelligibility and impact.",
+            "recommendation": "Maintain steady breath support through clause endings to ensure voice projection does not fade."
+          },
+          "truth": {
+            "type": "LOW_VOLUME",
+            "start": 10.592,
+            "end": 14.016,
+            "level": 3,
+            "param": "gain_db=-10.0"
+          }
+        },
+        {
+          "type": "UNCLEAR_ARTICULATION",
+          "iou": 0.627,
+          "detected": {
+            "id": "F5",
+            "type": "UNCLEAR_ARTICULATION",
+            "start": 30.36,
+            "end": 36.84,
+            "word_start_idx": 82,
+            "word_end_idx": 94,
+            "severity": 0.969,
+            "metric": "mfcc_dtw_cost",
+            "unit": "MFCC DTW cost",
+            "participant_value": 1.46,
+            "baseline_value": 0.25,
+            "delta_pct": 484.0,
+            "z_score": 16.54,
+            "explanation": "Between 30.4 s and 36.8 s ('entire nation. Next, the Congress is about to ...') spectral divergence rose to 1.46 MFCC DTW cost vs reference baseline (+484.0%, z = +16.5). Muffled phonetic transitions obscure consonant clarity.",
+            "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+          },
+          "truth": {
+            "type": "UNCLEAR_ARTICULATION",
+            "start": 32.048,
+            "end": 36.112,
+            "level": 3,
+            "param": "cutoff_hz=2500"
+          }
+        }
+      ]
+    },
+    {
+      "pair_id": "clip01_L4_mixed",
+      "level": 4,
+      "overall_score": 72.3,
+      "scores": {
+        "overall": 72.3,
+        "pace": 63.8,
+        "intonation": 81.7,
+        "volume": 64.6,
+        "pausing": 84.7,
+        "clarity": 67.5
+      },
+      "detected_count": 8,
+      "truth_count": 6,
+      "detected": [
+        {
+          "id": "F1",
+          "type": "LOW_VOLUME",
+          "start": 0.0,
+          "end": 3.46,
+          "word_start_idx": 0,
+          "word_end_idx": 6,
+          "severity": 0.772,
+          "metric": "rms_db_rel",
+          "unit": "dB",
+          "participant_value": -22.62,
+          "baseline_value": -10.93,
+          "delta_pct": -107.0,
+          "z_score": -2.7,
+          "explanation": "Between 0.0 s and 3.5 s ('Secondly, I have requested the Congress and') vocal volume dropped to -22.6 dB vs -10.9 in the reference (-107.0%, drop: 11.7 dB, z = -2.7). Trailing off reduces intelligibility and impact.",
+          "recommendation": "Maintain steady breath support through clause endings to ensure voice projection does not fade."
+        },
+        {
+          "id": "F2",
+          "type": "MONOTONE",
+          "start": 10.84,
+          "end": 14.6,
+          "word_start_idx": 26,
+          "word_end_idx": 34,
+          "severity": 0.846,
+          "metric": "std_f0_st",
+          "unit": "semitones",
+          "participant_value": 1.16,
+          "baseline_value": 4.4,
+          "delta_pct": -73.6,
+          "z_score": -3.1,
+          "explanation": "Between 10.8 s and 14.6 s ('work after long years of wasteful inaction, and ...') pitch varied by only 1.2 semitones vs 4.4 in the reference (-73.6%, z = -3.1). Flat pitch removes the emphasis cues listeners use to follow the argument.",
+          "recommendation": "Practice exaggerating vocal inflection upward on key verbs and downward on statement endings."
+        },
+        {
+          "id": "F3",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 11.94,
+          "end": 14.44,
+          "word_start_idx": 29,
+          "word_end_idx": 33,
+          "severity": 0.712,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 1.95,
+          "baseline_value": 0.65,
+          "delta_pct": 200.0,
+          "z_score": 3.21,
+          "explanation": "Between 11.9 s and 14.4 s ('years of wasteful inaction, and') spectral divergence rose to 1.95 MFCC DTW cost vs reference baseline (+200.0%, z = +3.2). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F4",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 22.66,
+          "end": 27.6,
+          "word_start_idx": 59,
+          "word_end_idx": 74,
+          "severity": 0.894,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 2.36,
+          "baseline_value": 0.65,
+          "delta_pct": 263.1,
+          "z_score": 4.7,
+          "explanation": "Between 22.7 s and 27.6 s ('It will add to the comfort and to ...') spectral divergence rose to 2.36 MFCC DTW cost vs reference baseline (+263.1%, z = +4.7). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F5",
+          "type": "LOW_VOLUME",
+          "start": 26.96,
+          "end": 31.4,
+          "word_start_idx": 73,
+          "word_end_idx": 77,
+          "severity": 0.953,
+          "metric": "rms_db_rel",
+          "unit": "dB",
+          "participant_value": -163.45,
+          "baseline_value": -15.46,
+          "delta_pct": -957.2,
+          "z_score": -36.86,
+          "explanation": "Between 27.0 s and 31.4 s ('of people, and the incident') vocal volume dropped to -163.4 dB vs -15.5 in the reference (-957.2%, drop: 148.0 dB, z = -36.9). Trailing off reduces intelligibility and impact.",
+          "recommendation": "Maintain steady breath support through clause endings to ensure voice projection does not fade."
+        },
+        {
+          "id": "F6",
+          "type": "LONG_PAUSE",
+          "start": 27.6,
+          "end": 30.36,
+          "word_start_idx": 74,
+          "word_end_idx": 75,
+          "severity": 0.952,
+          "metric": "pause_gap_s",
+          "unit": "seconds",
+          "participant_value": 2.76,
+          "baseline_value": 0.38,
+          "delta_pct": 626.3,
+          "z_score": 4.76,
+          "explanation": "Between 27.6 s and 30.4 s ('people, and') silent pause lasted 2.8 seconds vs 0.4 in the reference (+626.3%, gap delta: +2.4 s). Unintended silence breaks conversational rhythm.",
+          "recommendation": "Bridge conceptual thoughts smoothly without prolonged hesitation between phrases."
+        },
+        {
+          "id": "F7",
+          "type": "TOO_FAST",
+          "start": 36.08,
+          "end": 37.68,
+          "word_start_idx": 87,
+          "word_end_idx": 92,
+          "severity": 0.804,
+          "metric": "rate_sps",
+          "unit": "syllables/s",
+          "participant_value": 7.75,
+          "baseline_value": 4.85,
+          "delta_pct": 59.8,
+          "z_score": 4.29,
+          "explanation": "Between 36.1 s and 37.7 s ('is about to pass legislation that') speaking rate accelerated to 7.8 syllables/s vs 4.8 in the reference (+59.8%, z = +4.3). Rushed delivery impairs clarity and prevents listeners from processing the content.",
+          "recommendation": "Slow down cadence on transition words and take deliberate breaths between clauses."
+        },
+        {
+          "id": "F8",
+          "type": "TOO_SLOW",
+          "start": 45.18,
+          "end": 52.92,
+          "word_start_idx": 112,
+          "word_end_idx": 127,
+          "severity": 0.75,
+          "metric": "rate_sps",
+          "unit": "syllables/s",
+          "participant_value": 2.86,
+          "baseline_value": 5.19,
+          "delta_pct": -44.9,
+          "z_score": -2.88,
+          "explanation": "Between 45.2 s and 52.9 s ('the easing of the burden of debt that ...') speaking rate dragged at 2.9 syllables/s vs 5.2 in the reference (-44.9%, z = -2.9). Dragging tempo causes energy to drop and risks losing audience engagement.",
+          "recommendation": "Pick up pacing and maintain forward momentum through multi-syllable phrases."
+        }
+      ],
+      "truth": [
+        {
+          "type": "LOW_VOLUME",
+          "start": 0.304,
+          "end": 3.216,
+          "level": 4,
+          "param": "gain_db=-15.0"
+        },
+        {
+          "type": "MONOTONE",
+          "start": 10.592,
+          "end": 14.016,
+          "level": 4,
+          "param": "fraction=0.00"
+        },
+        {
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 23.232,
+          "end": 28.064,
+          "level": 4,
+          "param": "cutoff_hz=1500"
+        },
+        {
+          "type": "LONG_PAUSE",
+          "start": 28.064,
+          "end": 30.464,
+          "level": 4,
+          "param": "pause_s=2.4"
+        },
+        {
+          "type": "TOO_FAST",
+          "start": 35.744,
+          "end": 37.375,
+          "level": 4,
+          "param": "rate=1.70"
+        },
+        {
+          "type": "TOO_SLOW",
+          "start": 43.103,
+          "end": 54.26,
+          "level": 4,
+          "param": "rate=0.55"
+        }
+      ],
+      "matches": [
+        {
+          "type": "MONOTONE",
+          "iou": 0.792,
+          "detected": {
+            "id": "F2",
+            "type": "MONOTONE",
+            "start": 10.84,
+            "end": 14.6,
+            "word_start_idx": 26,
+            "word_end_idx": 34,
+            "severity": 0.846,
+            "metric": "std_f0_st",
+            "unit": "semitones",
+            "participant_value": 1.16,
+            "baseline_value": 4.4,
+            "delta_pct": -73.6,
+            "z_score": -3.1,
+            "explanation": "Between 10.8 s and 14.6 s ('work after long years of wasteful inaction, and ...') pitch varied by only 1.2 semitones vs 4.4 in the reference (-73.6%, z = -3.1). Flat pitch removes the emphasis cues listeners use to follow the argument.",
+            "recommendation": "Practice exaggerating vocal inflection upward on key verbs and downward on statement endings."
+          },
+          "truth": {
+            "type": "MONOTONE",
+            "start": 10.592,
+            "end": 14.016,
+            "level": 4,
+            "param": "fraction=0.00"
+          }
+        },
+        {
+          "type": "TOO_FAST",
+          "iou": 0.669,
+          "detected": {
+            "id": "F7",
+            "type": "TOO_FAST",
+            "start": 36.08,
+            "end": 37.68,
+            "word_start_idx": 87,
+            "word_end_idx": 92,
+            "severity": 0.804,
+            "metric": "rate_sps",
+            "unit": "syllables/s",
+            "participant_value": 7.75,
+            "baseline_value": 4.85,
+            "delta_pct": 59.8,
+            "z_score": 4.29,
+            "explanation": "Between 36.1 s and 37.7 s ('is about to pass legislation that') speaking rate accelerated to 7.8 syllables/s vs 4.8 in the reference (+59.8%, z = +4.3). Rushed delivery impairs clarity and prevents listeners from processing the content.",
+            "recommendation": "Slow down cadence on transition words and take deliberate breaths between clauses."
+          },
+          "truth": {
+            "type": "TOO_FAST",
+            "start": 35.744,
+            "end": 37.375,
+            "level": 4,
+            "param": "rate=1.70"
+          }
+        },
+        {
+          "type": "TOO_SLOW",
+          "iou": 0.694,
+          "detected": {
+            "id": "F8",
+            "type": "TOO_SLOW",
+            "start": 45.18,
+            "end": 52.92,
+            "word_start_idx": 112,
+            "word_end_idx": 127,
+            "severity": 0.75,
+            "metric": "rate_sps",
+            "unit": "syllables/s",
+            "participant_value": 2.86,
+            "baseline_value": 5.19,
+            "delta_pct": -44.9,
+            "z_score": -2.88,
+            "explanation": "Between 45.2 s and 52.9 s ('the easing of the burden of debt that ...') speaking rate dragged at 2.9 syllables/s vs 5.2 in the reference (-44.9%, z = -2.9). Dragging tempo causes energy to drop and risks losing audience engagement.",
+            "recommendation": "Pick up pacing and maintain forward momentum through multi-syllable phrases."
+          },
+          "truth": {
+            "type": "TOO_SLOW",
+            "start": 43.103,
+            "end": 54.26,
+            "level": 4,
+            "param": "rate=0.55"
+          }
+        },
+        {
+          "type": "LONG_PAUSE",
+          "iou": 0.802,
+          "detected": {
+            "id": "F6",
+            "type": "LONG_PAUSE",
+            "start": 27.6,
+            "end": 30.36,
+            "word_start_idx": 74,
+            "word_end_idx": 75,
+            "severity": 0.952,
+            "metric": "pause_gap_s",
+            "unit": "seconds",
+            "participant_value": 2.76,
+            "baseline_value": 0.38,
+            "delta_pct": 626.3,
+            "z_score": 4.76,
+            "explanation": "Between 27.6 s and 30.4 s ('people, and') silent pause lasted 2.8 seconds vs 0.4 in the reference (+626.3%, gap delta: +2.4 s). Unintended silence breaks conversational rhythm.",
+            "recommendation": "Bridge conceptual thoughts smoothly without prolonged hesitation between phrases."
+          },
+          "truth": {
+            "type": "LONG_PAUSE",
+            "start": 28.064,
+            "end": 30.464,
+            "level": 4,
+            "param": "pause_s=2.4"
+          }
+        },
+        {
+          "type": "LOW_VOLUME",
+          "iou": 0.842,
+          "detected": {
+            "id": "F1",
+            "type": "LOW_VOLUME",
+            "start": 0.0,
+            "end": 3.46,
+            "word_start_idx": 0,
+            "word_end_idx": 6,
+            "severity": 0.772,
+            "metric": "rms_db_rel",
+            "unit": "dB",
+            "participant_value": -22.62,
+            "baseline_value": -10.93,
+            "delta_pct": -107.0,
+            "z_score": -2.7,
+            "explanation": "Between 0.0 s and 3.5 s ('Secondly, I have requested the Congress and') vocal volume dropped to -22.6 dB vs -10.9 in the reference (-107.0%, drop: 11.7 dB, z = -2.7). Trailing off reduces intelligibility and impact.",
+            "recommendation": "Maintain steady breath support through clause endings to ensure voice projection does not fade."
+          },
+          "truth": {
+            "type": "LOW_VOLUME",
+            "start": 0.304,
+            "end": 3.216,
+            "level": 4,
+            "param": "gain_db=-15.0"
+          }
+        },
+        {
+          "type": "UNCLEAR_ARTICULATION",
+          "iou": 0.808,
+          "detected": {
+            "id": "F4",
+            "type": "UNCLEAR_ARTICULATION",
+            "start": 22.66,
+            "end": 27.6,
+            "word_start_idx": 59,
+            "word_end_idx": 74,
+            "severity": 0.894,
+            "metric": "mfcc_dtw_cost",
+            "unit": "MFCC DTW cost",
+            "participant_value": 2.36,
+            "baseline_value": 0.65,
+            "delta_pct": 263.1,
+            "z_score": 4.7,
+            "explanation": "Between 22.7 s and 27.6 s ('It will add to the comfort and to ...') spectral divergence rose to 2.36 MFCC DTW cost vs reference baseline (+263.1%, z = +4.7). Muffled phonetic transitions obscure consonant clarity.",
+            "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+          },
+          "truth": {
+            "type": "UNCLEAR_ARTICULATION",
+            "start": 23.232,
+            "end": 28.064,
+            "level": 4,
+            "param": "cutoff_hz=1500"
+          }
+        }
+      ]
+    },
+    {
+      "pair_id": "clip01_L3_MONOTONE",
+      "level": 3,
+      "overall_score": 84.1,
+      "scores": {
+        "overall": 84.1,
+        "pace": 100.0,
+        "intonation": 83.3,
+        "volume": 100.0,
+        "pausing": 100.0,
+        "clarity": 41.3
+      },
+      "detected_count": 5,
+      "truth_count": 1,
+      "detected": [
+        {
+          "id": "F1",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 8.42,
+          "end": 14.6,
+          "word_start_idx": 21,
+          "word_end_idx": 34,
+          "severity": 0.979,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.66,
+          "baseline_value": 0.01,
+          "delta_pct": 6500.0,
+          "z_score": 21.32,
+          "explanation": "Between 8.4 s and 14.6 s ('government at Muscle Shoals to work after long ...') spectral divergence rose to 0.66 MFCC DTW cost vs reference baseline (+6500.0%, z = +21.3). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F2",
+          "type": "MONOTONE",
+          "start": 10.86,
+          "end": 14.6,
+          "word_start_idx": 26,
+          "word_end_idx": 34,
+          "severity": 0.706,
+          "metric": "std_f0_st",
+          "unit": "semitones",
+          "participant_value": 1.72,
+          "baseline_value": 4.4,
+          "delta_pct": -60.9,
+          "z_score": -2.48,
+          "explanation": "Between 10.9 s and 14.6 s ('work after long years of wasteful inaction, and ...') pitch varied by only 1.7 semitones vs 4.4 in the reference (-60.9%, z = -2.5). Flat pitch removes the emphasis cues listeners use to follow the argument.",
+          "recommendation": "Practice exaggerating vocal inflection upward on key verbs and downward on statement endings."
+        },
+        {
+          "id": "F3",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 27.28,
+          "end": 33.56,
+          "word_start_idx": 74,
+          "word_end_idx": 85,
+          "severity": 0.839,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.37,
+          "baseline_value": 0.01,
+          "delta_pct": 3600.0,
+          "z_score": 14.06,
+          "explanation": "Between 27.3 s and 33.6 s ('people, and the incident benefits will reach the ...') spectral divergence rose to 0.37 MFCC DTW cost vs reference baseline (+3600.0%, z = +14.1). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F4",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 37.58,
+          "end": 38.34,
+          "word_start_idx": 97,
+          "word_end_idx": 98,
+          "severity": 0.648,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.14,
+          "baseline_value": 0.01,
+          "delta_pct": 1300.0,
+          "z_score": 2.7,
+          "explanation": "Between 37.6 s and 38.3 s ('mortgage distress') spectral divergence rose to 0.14 MFCC DTW cost vs reference baseline (+1300.0%, z = +2.7). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F5",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 45.46,
+          "end": 46.8,
+          "word_start_idx": 122,
+          "word_end_idx": 125,
+          "severity": 0.749,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.16,
+          "baseline_value": 0.01,
+          "delta_pct": 1500.0,
+          "z_score": 3.0,
+          "explanation": "Between 45.5 s and 46.8 s ('so heavily upon millions') spectral divergence rose to 0.16 MFCC DTW cost vs reference baseline (+1500.0%, z = +3.0). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        }
+      ],
+      "truth": [
+        {
+          "type": "MONOTONE",
+          "start": 10.592,
+          "end": 14.016,
+          "level": 3,
+          "param": "fraction=0.25"
+        }
+      ],
+      "matches": [
+        {
+          "type": "MONOTONE",
+          "iou": 0.787,
+          "detected": {
+            "id": "F2",
+            "type": "MONOTONE",
+            "start": 10.86,
+            "end": 14.6,
+            "word_start_idx": 26,
+            "word_end_idx": 34,
+            "severity": 0.706,
+            "metric": "std_f0_st",
+            "unit": "semitones",
+            "participant_value": 1.72,
+            "baseline_value": 4.4,
+            "delta_pct": -60.9,
+            "z_score": -2.48,
+            "explanation": "Between 10.9 s and 14.6 s ('work after long years of wasteful inaction, and ...') pitch varied by only 1.7 semitones vs 4.4 in the reference (-60.9%, z = -2.5). Flat pitch removes the emphasis cues listeners use to follow the argument.",
+            "recommendation": "Practice exaggerating vocal inflection upward on key verbs and downward on statement endings."
+          },
+          "truth": {
+            "type": "MONOTONE",
+            "start": 10.592,
+            "end": 14.016,
+            "level": 3,
+            "param": "fraction=0.25"
+          }
+        }
+      ]
+    },
+    {
+      "pair_id": "clip01_L3_TOO_FAST",
+      "level": 3,
+      "overall_score": 94.5,
+      "scores": {
+        "overall": 94.5,
+        "pace": 94.2,
+        "intonation": 100.0,
+        "volume": 100.0,
+        "pausing": 100.0,
+        "clarity": 79.9
+      },
+      "detected_count": 3,
+      "truth_count": 1,
+      "detected": [
+        {
+          "id": "F1",
+          "type": "TOO_FAST",
+          "start": 11.3,
+          "end": 12.42,
+          "word_start_idx": 28,
+          "word_end_idx": 32,
+          "severity": 0.761,
+          "metric": "rate_sps",
+          "unit": "syllables/s",
+          "participant_value": 7.07,
+          "baseline_value": 4.7,
+          "delta_pct": 50.4,
+          "z_score": 2.9,
+          "explanation": "Between 11.3 s and 12.4 s ('long years of wasteful inaction,') speaking rate accelerated to 7.1 syllables/s vs 4.7 in the reference (+50.4%, z = +2.9). Rushed delivery impairs clarity and prevents listeners from processing the content.",
+          "recommendation": "Slow down cadence on transition words and take deliberate breaths between clauses."
+        },
+        {
+          "id": "F2",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 11.3,
+          "end": 13.4,
+          "word_start_idx": 28,
+          "word_end_idx": 33,
+          "severity": 0.963,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 1.87,
+          "baseline_value": 0.72,
+          "delta_pct": 159.7,
+          "z_score": 8.2,
+          "explanation": "Between 11.3 s and 13.4 s ('long years of wasteful inaction, and') spectral divergence rose to 1.87 MFCC DTW cost vs reference baseline (+159.7%, z = +8.2). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F3",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 26.92,
+          "end": 28.5,
+          "word_start_idx": 75,
+          "word_end_idx": 78,
+          "severity": 0.738,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 1.24,
+          "baseline_value": 0.72,
+          "delta_pct": 72.2,
+          "z_score": 3.07,
+          "explanation": "Between 26.9 s and 28.5 s ('and the incident benefits') spectral divergence rose to 1.24 MFCC DTW cost vs reference baseline (+72.2%, z = +3.1). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        }
+      ],
+      "truth": [
+        {
+          "type": "TOO_FAST",
+          "start": 10.592,
+          "end": 12.952,
+          "level": 3,
+          "param": "rate=1.45"
+        }
+      ],
+      "matches": [
+        {
+          "type": "TOO_FAST",
+          "iou": 0.475,
+          "detected": {
+            "id": "F1",
+            "type": "TOO_FAST",
+            "start": 11.3,
+            "end": 12.42,
+            "word_start_idx": 28,
+            "word_end_idx": 32,
+            "severity": 0.761,
+            "metric": "rate_sps",
+            "unit": "syllables/s",
+            "participant_value": 7.07,
+            "baseline_value": 4.7,
+            "delta_pct": 50.4,
+            "z_score": 2.9,
+            "explanation": "Between 11.3 s and 12.4 s ('long years of wasteful inaction,') speaking rate accelerated to 7.1 syllables/s vs 4.7 in the reference (+50.4%, z = +2.9). Rushed delivery impairs clarity and prevents listeners from processing the content.",
+            "recommendation": "Slow down cadence on transition words and take deliberate breaths between clauses."
+          },
+          "truth": {
+            "type": "TOO_FAST",
+            "start": 10.592,
+            "end": 12.952,
+            "level": 3,
+            "param": "rate=1.45"
+          }
+        }
+      ]
+    },
+    {
+      "pair_id": "clip01_L3_TOO_SLOW",
+      "level": 3,
+      "overall_score": 89.9,
+      "scores": {
+        "overall": 89.9,
+        "pace": 87.7,
+        "intonation": 100.0,
+        "volume": 100.0,
+        "pausing": 100.0,
+        "clarity": 65.1
+      },
+      "detected_count": 2,
+      "truth_count": 1,
+      "detected": [
+        {
+          "id": "F1",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 8.82,
+          "end": 16.18,
+          "word_start_idx": 22,
+          "word_end_idx": 34,
+          "severity": 0.871,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 1.38,
+          "baseline_value": 0.47,
+          "delta_pct": 193.6,
+          "z_score": 9.68,
+          "explanation": "Between 8.8 s and 16.2 s ('at Muscle Shoals to work after long years ...') spectral divergence rose to 1.38 MFCC DTW cost vs reference baseline (+193.6%, z = +9.7). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F2",
+          "type": "TOO_SLOW",
+          "start": 13.02,
+          "end": 16.18,
+          "word_start_idx": 30,
+          "word_end_idx": 34,
+          "severity": 0.619,
+          "metric": "rate_sps",
+          "unit": "syllables/s",
+          "participant_value": 3.63,
+          "baseline_value": 5.6,
+          "delta_pct": -35.2,
+          "z_score": -3.19,
+          "explanation": "Between 13.0 s and 16.2 s ('of wasteful inaction, and with') speaking rate dragged at 3.6 syllables/s vs 5.6 in the reference (-35.2%, z = -3.2). Dragging tempo causes energy to drop and risks losing audience engagement.",
+          "recommendation": "Pick up pacing and maintain forward momentum through multi-syllable phrases."
+        }
+      ],
+      "truth": [
+        {
+          "type": "TOO_SLOW",
+          "start": 10.592,
+          "end": 15.604,
+          "level": 3,
+          "param": "rate=0.68"
+        }
+      ],
+      "matches": [
+        {
+          "type": "TOO_SLOW",
+          "iou": 0.462,
+          "detected": {
+            "id": "F2",
+            "type": "TOO_SLOW",
+            "start": 13.02,
+            "end": 16.18,
+            "word_start_idx": 30,
+            "word_end_idx": 34,
+            "severity": 0.619,
+            "metric": "rate_sps",
+            "unit": "syllables/s",
+            "participant_value": 3.63,
+            "baseline_value": 5.6,
+            "delta_pct": -35.2,
+            "z_score": -3.19,
+            "explanation": "Between 13.0 s and 16.2 s ('of wasteful inaction, and with') speaking rate dragged at 3.6 syllables/s vs 5.6 in the reference (-35.2%, z = -3.2). Dragging tempo causes energy to drop and risks losing audience engagement.",
+            "recommendation": "Pick up pacing and maintain forward momentum through multi-syllable phrases."
+          },
+          "truth": {
+            "type": "TOO_SLOW",
+            "start": 10.592,
+            "end": 15.604,
+            "level": 3,
+            "param": "rate=0.68"
+          }
+        }
+      ]
+    },
+    {
+      "pair_id": "clip01_L3_LONG_PAUSE",
+      "level": 3,
+      "overall_score": 84.2,
+      "scores": {
+        "overall": 84.2,
+        "pace": 90.2,
+        "intonation": 100.0,
+        "volume": 76.7,
+        "pausing": 100.0,
+        "clarity": 50.5
+      },
+      "detected_count": 6,
+      "truth_count": 1,
+      "detected": [
+        {
+          "id": "F1",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 8.42,
+          "end": 16.48,
+          "word_start_idx": 21,
+          "word_end_idx": 35,
+          "severity": 0.934,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 1.27,
+          "baseline_value": 0.17,
+          "delta_pct": 647.1,
+          "z_score": 16.39,
+          "explanation": "Between 8.4 s and 16.5 s ('government at Muscle Shoals to work after long ...') spectral divergence rose to 1.27 MFCC DTW cost vs reference baseline (+647.1%, z = +16.4). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F2",
+          "type": "LOW_VOLUME",
+          "start": 9.3,
+          "end": 13.24,
+          "word_start_idx": 23,
+          "word_end_idx": 27,
+          "severity": 1.0,
+          "metric": "rms_db_rel",
+          "unit": "dB",
+          "participant_value": -152.44,
+          "baseline_value": -10.4,
+          "delta_pct": -1365.8,
+          "z_score": -29.19,
+          "explanation": "Between 9.3 s and 13.2 s ('Muscle Shoals to work after') vocal volume dropped to -152.4 dB vs -10.4 in the reference (-1365.8%, drop: 142.0 dB, z = -29.2). Trailing off reduces intelligibility and impact.",
+          "recommendation": "Maintain steady breath support through clause endings to ensure voice projection does not fade."
+        },
+        {
+          "id": "F3",
+          "type": "TOO_FAST",
+          "start": 14.08,
+          "end": 14.78,
+          "word_start_idx": 31,
+          "word_end_idx": 32,
+          "severity": 0.602,
+          "metric": "rate_sps",
+          "unit": "syllables/s",
+          "participant_value": 7.19,
+          "baseline_value": 5.31,
+          "delta_pct": 35.4,
+          "z_score": 2.05,
+          "explanation": "Between 14.1 s and 14.8 s ('wasteful inaction,') speaking rate accelerated to 7.2 syllables/s vs 5.3 in the reference (+35.4%, z = +2.0). Rushed delivery impairs clarity and prevents listeners from processing the content.",
+          "recommendation": "Slow down cadence on transition words and take deliberate breaths between clauses."
+        },
+        {
+          "id": "F4",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 23.44,
+          "end": 25.68,
+          "word_start_idx": 57,
+          "word_end_idx": 61,
+          "severity": 0.586,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.48,
+          "baseline_value": 0.17,
+          "delta_pct": 182.4,
+          "z_score": 2.63,
+          "explanation": "Between 23.4 s and 25.7 s ('Tennessee Valley. It will add') spectral divergence rose to 0.48 MFCC DTW cost vs reference baseline (+182.4%, z = +2.6). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F5",
+          "type": "TOO_FAST",
+          "start": 42.48,
+          "end": 44.62,
+          "word_start_idx": 107,
+          "word_end_idx": 111,
+          "severity": 0.515,
+          "metric": "rate_sps",
+          "unit": "syllables/s",
+          "participant_value": 5.37,
+          "baseline_value": 3.77,
+          "delta_pct": 42.4,
+          "z_score": 1.57,
+          "explanation": "Between 42.5 s and 44.6 s ('the nation, by providing for') speaking rate accelerated to 5.4 syllables/s vs 3.8 in the reference (+42.4%, z = +1.6). Rushed delivery impairs clarity and prevents listeners from processing the content.",
+          "recommendation": "Slow down cadence on transition words and take deliberate breaths between clauses."
+        },
+        {
+          "id": "F6",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 42.48,
+          "end": 44.62,
+          "word_start_idx": 107,
+          "word_end_idx": 111,
+          "severity": 0.603,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.48,
+          "baseline_value": 0.17,
+          "delta_pct": 182.4,
+          "z_score": 2.65,
+          "explanation": "Between 42.5 s and 44.6 s ('the nation, by providing for') spectral divergence rose to 0.48 MFCC DTW cost vs reference baseline (+182.4%, z = +2.6). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        }
+      ],
+      "truth": [
+        {
+          "type": "LONG_PAUSE",
+          "start": 10.592,
+          "end": 12.192,
+          "level": 3,
+          "param": "pause_s=1.6"
+        }
+      ],
+      "matches": []
+    },
+    {
+      "pair_id": "clip01_L3_LOW_VOLUME",
+      "level": 3,
+      "overall_score": 89.8,
+      "scores": {
+        "overall": 89.8,
+        "pace": 100.0,
+        "intonation": 100.0,
+        "volume": 94.7,
+        "pausing": 100.0,
+        "clarity": 53.1
+      },
+      "detected_count": 4,
+      "truth_count": 1,
+      "detected": [
+        {
+          "id": "F1",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 8.42,
+          "end": 13.24,
+          "word_start_idx": 21,
+          "word_end_idx": 32,
+          "severity": 0.996,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.69,
+          "baseline_value": 0.03,
+          "delta_pct": 2200.0,
+          "z_score": 25.36,
+          "explanation": "Between 8.4 s and 13.2 s ('government at Muscle Shoals to work after long ...') spectral divergence rose to 0.69 MFCC DTW cost vs reference baseline (+2200.0%, z = +25.4). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F2",
+          "type": "LOW_VOLUME",
+          "start": 11.6,
+          "end": 12.92,
+          "word_start_idx": 28,
+          "word_end_idx": 31,
+          "severity": 0.598,
+          "metric": "rms_db_rel",
+          "unit": "dB",
+          "participant_value": -16.15,
+          "baseline_value": -7.09,
+          "delta_pct": -127.8,
+          "z_score": -1.88,
+          "explanation": "Between 11.6 s and 12.9 s ('long years of wasteful') vocal volume dropped to -16.1 dB vs -7.1 in the reference (-127.8%, drop: 9.1 dB, z = -1.9). Trailing off reduces intelligibility and impact.",
+          "recommendation": "Maintain steady breath support through clause endings to ensure voice projection does not fade."
+        },
+        {
+          "id": "F3",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 30.14,
+          "end": 33.56,
+          "word_start_idx": 81,
+          "word_end_idx": 85,
+          "severity": 0.969,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.23,
+          "baseline_value": 0.03,
+          "delta_pct": 666.7,
+          "z_score": 4.36,
+          "explanation": "Between 30.1 s and 33.6 s ('the entire nation. Next, the') spectral divergence rose to 0.23 MFCC DTW cost vs reference baseline (+666.7%, z = +4.4). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F4",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 38.3,
+          "end": 40.02,
+          "word_start_idx": 99,
+          "word_end_idx": 103,
+          "severity": 0.6,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.15,
+          "baseline_value": 0.03,
+          "delta_pct": 400.0,
+          "z_score": 2.74,
+          "explanation": "Between 38.3 s and 40.0 s ('among the farmers and among') spectral divergence rose to 0.15 MFCC DTW cost vs reference baseline (+400.0%, z = +2.7). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        }
+      ],
+      "truth": [
+        {
+          "type": "LOW_VOLUME",
+          "start": 10.592,
+          "end": 14.016,
+          "level": 3,
+          "param": "gain_db=-10.0"
+        }
+      ],
+      "matches": [
+        {
+          "type": "LOW_VOLUME",
+          "iou": 0.386,
+          "detected": {
+            "id": "F2",
+            "type": "LOW_VOLUME",
+            "start": 11.6,
+            "end": 12.92,
+            "word_start_idx": 28,
+            "word_end_idx": 31,
+            "severity": 0.598,
+            "metric": "rms_db_rel",
+            "unit": "dB",
+            "participant_value": -16.15,
+            "baseline_value": -7.09,
+            "delta_pct": -127.8,
+            "z_score": -1.88,
+            "explanation": "Between 11.6 s and 12.9 s ('long years of wasteful') vocal volume dropped to -16.1 dB vs -7.1 in the reference (-127.8%, drop: 9.1 dB, z = -1.9). Trailing off reduces intelligibility and impact.",
+            "recommendation": "Maintain steady breath support through clause endings to ensure voice projection does not fade."
+          },
+          "truth": {
+            "type": "LOW_VOLUME",
+            "start": 10.592,
+            "end": 14.016,
+            "level": 3,
+            "param": "gain_db=-10.0"
+          }
+        }
+      ]
+    },
+    {
+      "pair_id": "clip01_L3_UNCLEAR_ARTICULATION",
+      "level": 3,
+      "overall_score": 89.7,
+      "scores": {
+        "overall": 89.7,
+        "pace": 100.0,
+        "intonation": 100.0,
+        "volume": 100.0,
+        "pausing": 100.0,
+        "clarity": 48.7
+      },
+      "detected_count": 3,
+      "truth_count": 1,
+      "detected": [
+        {
+          "id": "F1",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 8.42,
+          "end": 14.6,
+          "word_start_idx": 21,
+          "word_end_idx": 34,
+          "severity": 1.0,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 1.88,
+          "baseline_value": 0.12,
+          "delta_pct": 1466.7,
+          "z_score": 60.25,
+          "explanation": "Between 8.4 s and 14.6 s ('government at Muscle Shoals to work after long ...') spectral divergence rose to 1.88 MFCC DTW cost vs reference baseline (+1466.7%, z = +60.2). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F2",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 30.14,
+          "end": 33.56,
+          "word_start_idx": 81,
+          "word_end_idx": 85,
+          "severity": 0.946,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.31,
+          "baseline_value": 0.12,
+          "delta_pct": 158.3,
+          "z_score": 4.08,
+          "explanation": "Between 30.1 s and 33.6 s ('the entire nation. Next, the') spectral divergence rose to 0.31 MFCC DTW cost vs reference baseline (+158.3%, z = +4.1). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        },
+        {
+          "id": "F3",
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 38.3,
+          "end": 40.02,
+          "word_start_idx": 99,
+          "word_end_idx": 103,
+          "severity": 0.586,
+          "metric": "mfcc_dtw_cost",
+          "unit": "MFCC DTW cost",
+          "participant_value": 0.23,
+          "baseline_value": 0.12,
+          "delta_pct": 91.7,
+          "z_score": 2.57,
+          "explanation": "Between 38.3 s and 40.0 s ('among the farmers and among') spectral divergence rose to 0.23 MFCC DTW cost vs reference baseline (+91.7%, z = +2.6). Muffled phonetic transitions obscure consonant clarity.",
+          "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+        }
+      ],
+      "truth": [
+        {
+          "type": "UNCLEAR_ARTICULATION",
+          "start": 10.592,
+          "end": 14.016,
+          "level": 3,
+          "param": "cutoff_hz=2500"
+        }
+      ],
+      "matches": [
+        {
+          "type": "UNCLEAR_ARTICULATION",
+          "iou": 0.554,
+          "detected": {
+            "id": "F1",
+            "type": "UNCLEAR_ARTICULATION",
+            "start": 8.42,
+            "end": 14.6,
+            "word_start_idx": 21,
+            "word_end_idx": 34,
+            "severity": 1.0,
+            "metric": "mfcc_dtw_cost",
+            "unit": "MFCC DTW cost",
+            "participant_value": 1.88,
+            "baseline_value": 0.12,
+            "delta_pct": 1466.7,
+            "z_score": 60.25,
+            "explanation": "Between 8.4 s and 14.6 s ('government at Muscle Shoals to work after long ...') spectral divergence rose to 1.88 MFCC DTW cost vs reference baseline (+1466.7%, z = +60.2). Muffled phonetic transitions obscure consonant clarity.",
+            "recommendation": "Crisply articulate initial and terminal consonants, particularly on multisyllabic words."
+          },
+          "truth": {
+            "type": "UNCLEAR_ARTICULATION",
+            "start": 10.592,
+            "end": 14.016,
+            "level": 3,
+            "param": "cutoff_hz=2500"
+          }
+        }
+      ]
+    }
+  ]
+}

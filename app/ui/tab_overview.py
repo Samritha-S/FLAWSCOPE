@@ -36,22 +36,47 @@ def render_score_cards(scores: Dict[str, float]) -> None:
         )
 
     dimensions = [
-        ("pace", "Pace", scores.get("pace", 0.0)),
-        ("intonation", "Intonation", scores.get("intonation", 0.0)),
-        ("volume", "Volume", scores.get("volume", 0.0)),
-        ("pausing", "Pausing", scores.get("pausing", 0.0)),
-        ("clarity", "Clarity", scores.get("clarity", 0.0)),
+        (
+            "pace",
+            "Pace",
+            scores.get("pace", 0.0),
+            "Measures speaking speed and tempo stability (syllables/s vs baseline reference)",
+        ),
+        (
+            "intonation",
+            "Intonation",
+            scores.get("intonation", 0.0),
+            "Measures melodic pitch modulation, inflection, and pitch variance (semitones vs median)",
+        ),
+        (
+            "volume",
+            "Volume",
+            scores.get("volume", 0.0),
+            "Measures vocal projection stability and relative loudness (RMS energy in dB)",
+        ),
+        (
+            "pausing",
+            "Pausing",
+            scores.get("pausing", 0.0),
+            "Measures pause cadence and unnatural hesitation gaps (> 0.9s or > 0.5s delta)",
+        ),
+        (
+            "clarity",
+            "Clarity",
+            scores.get("clarity", 0.0),
+            "Measures acoustic articulation sharpness and phonetic alignment via DTW MFCC distance",
+        ),
     ]
 
     with col_dims:
         dim_cols = st.columns(5)
-        for i, (key, label, val) in enumerate(dimensions):
+        for i, (key, label, val, tip) in enumerate(dimensions):
             c_color = get_score_color(val)
             with dim_cols[i]:
                 st.markdown(
                     f"""
-                    <div class="flawscope-card" style="padding: 0.9rem 0.6rem; text-align: center;">
-                        <div style="font-size: 0.8rem; font-weight: 700; color: #4B5563; text-transform: uppercase;">{label}</div>
+                    <div class="flawscope-card" style="padding: 0.9rem 0.6rem; text-align: center; cursor: help;" title="{tip}">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: #4B5563; text-transform: uppercase; border-bottom: 1px dotted #9CA3AF; display: inline-block;">{label}</div>
                         <div class="score-sub" style="color: {c_color}; margin-top: 0.3rem;">{val:.1f}</div>
                         <div class="score-bar-bg">
                             <div class="score-bar-fill" style="width: {min(max(val, 0.0), 100.0)}%; background-color: {c_color};"></div>
