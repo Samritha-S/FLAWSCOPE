@@ -12,13 +12,17 @@ def build_timeline_figure(
     result: Dict[str, Any],
     x_range: Optional[Tuple[float, float]] = None,
 ) -> go.Figure:
-    """Build synchronized 3-row time-series figure comparing participant vs baseline."""
+    """Build synchronized 3-row time-series figure for benchmark or reference mode."""
+    meta = result.get("meta", {})
+    is_benchmark = (meta.get("mode") == "benchmark")
+
     curves = result.get("curves", {})
     t = curves.get("t", [])
     p_curves = curves.get("p", {})
     b_curves = curves.get("b", {})
 
     p_f0 = p_curves.get("f0_st", [])
+    p_f0_var = p_curves.get("f0_std_roll_st") or p_f0
     b_f0 = b_curves.get("f0_st", [])
     p_rms = p_curves.get("rms_db_rel", [])
     b_rms = b_curves.get("rms_db_rel", [])
@@ -27,50 +31,68 @@ def build_timeline_figure(
 
     words = result.get("words", [])
     flaws = result.get("flaws", [])
+    bands = result.get("bands", {})
 
     # Use WebGL if array is large
     use_gl = len(t) > 5000
     ScatterClass = go.Scattergl if use_gl else go.Scatter
+
+    participant_name = "Your delivery" if is_benchmark else "Participant"
+
+    subplot_titles = (
+        ("Pitch variation (curves.p.f0_std_roll_st)", "Loudness (rms_db_rel)", "Speech rate")
+        if is_benchmark
+        else (
+            "Pitch (F0, semitones vs speaker median)",
+            "Loudness (RMS intensity, dB rel)",
+            "Speech Rate (syllables/s, step cadence)",
+        )
+    )
 
     fig = make_subplots(
         rows=3,
         cols=1,
         shared_xaxes=True,
         vertical_spacing=0.08,
-        subplot_titles=(
-            "Pitch (F0, semitones vs speaker median)",
-            "Loudness (RMS intensity, dB rel)",
-            "Speech Rate (syllables/s, step cadence)",
-        ),
+        subplot_titles=subplot_titles,
     )
 
-    # --- Row 1: Pitch F0 ---
+    # --- Row 1: Pitch / Pitch Variation ---
+    r1_y = p_f0_var if is_benchmark else p_f0
+    r1_hover = (
+        "Pitch Std: %{y:.2f} st<extra></extra>"
+        if is_benchmark
+        else "Participant F0: %{y:.1f} st<extra></extra>"
+    )
+
     fig.add_trace(
         ScatterClass(
             x=t,
-            y=p_f0,
-            name="Participant",
+            y=r1_y,
+            name=participant_name,
             line=dict(color=PARTICIPANT_COLOR, width=1.6),
             connectgaps=False,
             showlegend=True,
-            hovertemplate="Participant F0: %{y:.1f} st<extra></extra>",
+            hovertemplate=r1_hover,
         ),
         row=1,
         col=1,
     )
-    fig.add_trace(
-        ScatterClass(
-            x=t,
-            y=b_f0,
-            name="Baseline (Warped)",
-            line=dict(color=BASELINE_COLOR, width=1.6, dash="dash"),
-            connectgaps=False,
-            showlegend=True,
-            hovertemplate="Baseline F0: %{y:.1f} st<extra></extra>",
-        ),
-        row=1,
-        col=1,
-    )
+
+    if not is_benchmark:
+        fig.add_trace(
+            ScatterClass(
+                x=t,
+                y=b_f0,
+                name="Baseline (Warped)",
+                line=dict(color=BASELINE_COLOR, width=1.6, dash="dash"),
+                connectgaps=False,
+                showlegend=True,
+                hovertemplate="Baseline F0: %{y:.1f} st<extra></extra>",
+            ),
+            row=1,
+            col=1,
+        )
 
     # Word center hover anchors on Row 1
     word_x = []
@@ -104,56 +126,111 @@ def build_timeline_figure(
         ScatterClass(
             x=t,
             y=p_rms,
-            name="Participant",
+            name=participant_name,
             line=dict(color=PARTICIPANT_COLOR, width=1.6),
             connectgaps=False,
             showlegend=False,
-            hovertemplate="Participant RMS: %{y:.1f} dB<extra></extra>",
+            hovertemplate=f"{participant_name} RMS: %{{y:.1f}} dB<extra></extra>",
         ),
         row=2,
         col=1,
     )
-    fig.add_trace(
-        ScatterClass(
-            x=t,
-            y=b_rms,
-            name="Baseline (Warped)",
-            line=dict(color=BASELINE_COLOR, width=1.6, dash="dash"),
-            connectgaps=False,
-            showlegend=False,
-            hovertemplate="Baseline RMS: %{y:.1f} dB<extra></extra>",
-        ),
-        row=2,
-        col=1,
-    )
+
+    if not is_benchmark:
+        fig.add_trace(
+            ScatterClass(
+                x=t,
+                y=b_rms,
+                name="Baseline (Warped)",
+                line=dict(color=BASELINE_COLOR, width=1.6, dash="dash"),
+                connectgaps=False,
+                showlegend=False,
+                hovertemplate="Baseline RMS: %{y:.1f} dB<extra></extra>",
+            ),
+            row=2,
+            col=1,
+        )
 
     # --- Row 3: Speech Rate ---
     fig.add_trace(
         ScatterClass(
             x=t,
             y=p_rate,
-            name="Participant",
+            name=participant_name,
             line=dict(color=PARTICIPANT_COLOR, width=1.6, shape="hv"),
             connectgaps=False,
             showlegend=False,
-            hovertemplate="Participant Rate: %{y:.1f} sps<extra></extra>",
+            hovertemplate=f"{participant_name} Rate: %{{y:.1f}} sps<extra></extra>",
         ),
         row=3,
         col=1,
     )
-    fig.add_trace(
-        ScatterClass(
-            x=t,
-            y=b_rate,
-            name="Baseline (Warped)",
-            line=dict(color=BASELINE_COLOR, width=1.6, dash="dash", shape="hv"),
-            connectgaps=False,
-            showlegend=False,
-            hovertemplate="Baseline Rate: %{y:.1f} sps<extra></extra>",
-        ),
-        row=3,
-        col=1,
-    )
+
+    if not is_benchmark:
+        fig.add_trace(
+            ScatterClass(
+                x=t,
+                y=b_rate,
+                name="Baseline (Warped)",
+                line=dict(color=BASELINE_COLOR, width=1.6, dash="dash", shape="hv"),
+                connectgaps=False,
+                showlegend=False,
+                hovertemplate="Baseline Rate: %{y:.1f} sps<extra></extra>",
+            ),
+            row=3,
+            col=1,
+        )
+
+    # --- Benchmark Mode: Shaded Typical Bands (green #3BB273 at 12% opacity) ---
+    if is_benchmark:
+        pitch_band = bands.get("pitch_variation") or bands.get("f0_std_roll_st") or [1.4, 3.2]
+        loud_band = bands.get("loudness") or bands.get("rms_db_rel") or [-4.0, 3.0]
+        rate_band = bands.get("speech_rate") or bands.get("rate_sps") or [3.2, 5.2]
+
+        # Row 1 Shaded Band
+        fig.add_hrect(
+            y0=pitch_band[0],
+            y1=pitch_band[1],
+            fillcolor="#3BB273",
+            opacity=0.12,
+            line_width=0,
+            row=1,
+            col=1,
+        )
+        # Row 2 Shaded Band
+        fig.add_hrect(
+            y0=loud_band[0],
+            y1=loud_band[1],
+            fillcolor="#3BB273",
+            opacity=0.12,
+            line_width=0,
+            row=2,
+            col=1,
+        )
+        # Row 3 Shaded Band
+        fig.add_hrect(
+            y0=rate_band[0],
+            y1=rate_band[1],
+            fillcolor="#3BB273",
+            opacity=0.12,
+            line_width=0,
+            row=3,
+            col=1,
+        )
+
+        # Legend entry for Typical Range
+        fig.add_trace(
+            go.Scatter(
+                x=[None],
+                y=[None],
+                mode="markers",
+                name="Typical range (strong speakers)",
+                marker=dict(size=10, color="rgba(59, 178, 115, 0.4)", symbol="square"),
+                showlegend=True,
+            ),
+            row=1,
+            col=1,
+        )
 
     # --- Flaw regions as translucent vrects spanning all rows ---
     for flaw in flaws:
@@ -202,7 +279,7 @@ def build_timeline_figure(
         )
 
     # Specific y-axis labels
-    fig.update_yaxes(title_text="Semitones", row=1, col=1)
+    fig.update_yaxes(title_text="Variation (st)" if is_benchmark else "Semitones", row=1, col=1)
     fig.update_yaxes(title_text="Rel dB", row=2, col=1)
     fig.update_yaxes(title_text="Syllables/s", row=3, col=1)
 

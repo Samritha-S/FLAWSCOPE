@@ -191,6 +191,27 @@ def inject_css() -> None:
         fill: #FF6B5B !important;
     }}
 
+    /* Mode Chip Styling */
+    .mode-chip {{
+        display: inline-block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.35rem 0.75rem;
+        border-radius: 6px;
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+    }}
+    .mode-benchmark {{
+        background-color: #E8F8F5;
+        color: #0F9D8A;
+        border: 1px solid rgba(15, 157, 138, 0.35);
+    }}
+    .mode-reference {{
+        background-color: #EEF2F6;
+        color: #1F2A37;
+        border: 1px solid #D1D5DB;
+    }}
+
     /* Responsive adjustments */
     @media (max-width: 768px) {{
         .score-large {{

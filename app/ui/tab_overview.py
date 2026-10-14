@@ -87,7 +87,7 @@ def render_score_cards(scores: Dict[str, float]) -> None:
                 )
 
 
-def render_radar_chart(scores: Dict[str, float]) -> go.Figure:
+def render_radar_chart(scores: Dict[str, float], is_benchmark: bool = False) -> go.Figure:
     """Create a filled Plotly radar chart for the 5 rubric dimensions."""
     categories = ["Pace", "Intonation", "Volume", "Pausing", "Clarity"]
     values = [
@@ -102,13 +102,15 @@ def render_radar_chart(scores: Dict[str, float]) -> go.Figure:
     r_vals = values + [values[0]]
     theta_vals = categories + [categories[0]]
 
+    trace_name = "Your delivery" if is_benchmark else "Participant"
+
     fig = go.Figure()
     fig.add_trace(
         go.Scatterpolar(
             r=r_vals,
             theta=theta_vals,
             fill="toself",
-            name="Participant",
+            name=trace_name,
             line=dict(color=PALETTE["teal"], width=2.5),
             fillcolor="rgba(15, 157, 138, 0.25)",
             marker=dict(size=6, color=PALETTE["teal"]),
@@ -279,6 +281,7 @@ def render(result: Dict[str, Any], ctx: Dict[str, Any]) -> None:
         st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
 
         col_chart1, col_chart2 = st.columns([1, 1])
+        is_benchmark = (result.get("meta", {}).get("mode") == "benchmark")
         with col_chart1:
             st.markdown(
                 """
@@ -289,7 +292,7 @@ def render(result: Dict[str, Any], ctx: Dict[str, Any]) -> None:
                 """,
                 unsafe_allow_html=True,
             )
-            radar_fig = render_radar_chart(scores)
+            radar_fig = render_radar_chart(scores, is_benchmark=is_benchmark)
             st.plotly_chart(radar_fig, use_container_width=True)
             st.markdown("</div>", unsafe_allow_html=True)
 

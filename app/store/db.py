@@ -173,9 +173,13 @@ def save_session(
     """
     init_db(db_path)
     ctx = ctx or {}
-    meta = result.get("meta", {})
+    meta = result.setdefault("meta", {})
     scores = result.get("scores", {})
     flaws = result.get("flaws", [])
+
+    # Ensure mode is explicitly set on meta
+    if "mode" not in meta or not meta["mode"]:
+        meta["mode"] = ctx.get("mode") or ("reference" if ctx.get("baseline_audio_path") else "benchmark")
 
     created_at = datetime.now(timezone.utc).isoformat()
     baseline_label = ctx.get("baseline_label") or meta.get("baseline_file", "")
@@ -183,9 +187,10 @@ def save_session(
     baseline_audio_path = str(ctx.get("baseline_audio_path") or "")
     participant_audio_path = str(ctx.get("participant_audio_path") or "")
 
-    transcript_text = ctx.get("transcript_text", "")
+    transcript_text = ctx.get("transcript_text", "") or meta.get("transcript_text", "")
     if not transcript_text and "words" in result:
         transcript_text = " ".join(w.get("text", "") for w in result["words"])
+    meta["transcript_text"] = transcript_text
     transcript_sha1 = hashlib.sha1(transcript_text.encode("utf-8")).hexdigest() if transcript_text else ""
 
     duration_p = float(meta.get("duration_p", 0.0))

@@ -15,15 +15,23 @@ from app.ui.theme import FLAW_COLORS
 def render(result: Dict[str, Any], ctx: Dict[str, Any]) -> None:
     """Render Flaws tab interface."""
     try:
+        meta = result.get("meta", {})
+        is_benchmark = (meta.get("mode") == "benchmark")
+
         flaws = result.get("flaws", [])
         words = result.get("words", [])
         p_audio = ctx.get("participant_audio")
         b_audio = ctx.get("baseline_audio")
 
         st.subheader("Detected Delivery Flaws & Actionable Guidance")
-        st.markdown(
-            "Sort, inspect, and listen to every temporally bounded flaw detected against baseline counterpoints."
-        )
+        if is_benchmark:
+            st.markdown(
+                "Inspect every detected delivery flaw benchmarked against typical ranges of strong speakers."
+            )
+        else:
+            st.markdown(
+                "Sort, inspect, and listen to every temporally bounded flaw detected against baseline counterpoints."
+            )
 
         if not flaws:
             st.info("No delivery flaws detected in this performance! Excellent delivery.")
@@ -32,18 +40,45 @@ def render(result: Dict[str, Any], ctx: Dict[str, Any]) -> None:
         # Prepare Table Data
         table_rows = []
         for f in flaws:
-            table_rows.append({
+            ref_range = f.get("reference_range")
+            range_display = (
+                f"[{ref_range[0]:.2f}, {ref_range[1]:.2f}]"
+                if isinstance(ref_range, (list, tuple)) and len(ref_range) >= 2
+                else (str(ref_range) if ref_range is not None else "-")
+            )
+
+            row_data = {
                 "ID": f.get("id", ""),
                 "Type": f.get("type", ""),
                 "Start (s)": round(float(f.get("start", 0.0)), 2),
                 "End (s)": round(float(f.get("end", 0.0)), 2),
                 "Severity": round(float(f.get("severity", 0.0)), 2),
                 "Metric": f.get("metric", ""),
-                "Participant": f.get("participant_value"),
-                "Baseline": f.get("baseline_value"),
-                "Delta (%)": round(float(f.get("delta_pct", 0.0)), 1) if f.get("delta_pct") is not None else None,
-                "Z-score": round(float(f.get("z_score", 0.0)), 2) if f.get("z_score") is not None else None,
-            })
+            }
+
+            if is_benchmark or ref_range is not None:
+                row_data["Your Value"] = f.get("participant_value")
+                row_data["Typical Range"] = range_display
+                row_data["Delta"] = (
+                    f"{float(f.get('delta_pct', 0.0)):+.1f}%"
+                    if f.get("delta_pct") is not None
+                    else (f"{float(f.get('z_score', 0.0)):+.2f} z" if f.get("z_score") is not None else "-")
+                )
+            else:
+                row_data["Participant"] = f.get("participant_value")
+                row_data["Baseline"] = f.get("baseline_value")
+                row_data["Delta (%)"] = (
+                    round(float(f.get("delta_pct", 0.0)), 1)
+                    if f.get("delta_pct") is not None
+                    else None
+                )
+                row_data["Z-score"] = (
+                    round(float(f.get("z_score", 0.0)), 2)
+                    if f.get("z_score") is not None
+                    else None
+                )
+
+            table_rows.append(row_data)
 
         df = pd.DataFrame(table_rows)
 
@@ -93,6 +128,7 @@ def render(result: Dict[str, Any], ctx: Dict[str, Any]) -> None:
             b_val = f.get("baseline_value")
             delta_pct = f.get("delta_pct")
             z = f.get("z_score")
+            ref_range = f.get("reference_range")
 
             expander_title = f"{fid} | {ft.replace('_', ' ')} [{s:.2f}s - {e:.2f}s] - Severity: {sev:.2f}"
 
@@ -110,14 +146,37 @@ def render(result: Dict[str, Any], ctx: Dict[str, Any]) -> None:
                     unsafe_allow_html=True,
                 )
 
-                # Metric table
-                metric_df = pd.DataFrame([{
-                    "Metric Name": f"{metric} ({unit})",
-                    "Participant Value": p_val if p_val is not None else "N/A",
-                    "Baseline Value": b_val if b_val is not None else "N/A",
-                    "Delta (%)": f"{delta_pct:+.1f}%" if delta_pct is not None else "N/A",
-                    "Z-score": f"{z:+.2f}" if z is not None else "N/A",
-                }])
+                # Metric comparison table
+                if ref_range is not None:
+                    range_str = (
+                        f"[{ref_range[0]:.2f}, {ref_range[1]:.2f}]"
+                        if isinstance(ref_range, (list, tuple)) and len(ref_range) >= 2
+                        else str(ref_range)
+                    )
+                    your_val_str = (
+                        f"{p_val:.2f}"
+                        if isinstance(p_val, (int, float))
+                        else (str(p_val) if p_val is not None else "N/A")
+                    )
+                    delta_str = (
+                        f"{delta_pct:+.1f}%"
+                        if delta_pct is not None
+                        else (f"{z:+.2f} z" if z is not None else "N/A")
+                    )
+                    metric_df = pd.DataFrame([{
+                        "Metric": f"{metric} ({unit})" if unit else metric,
+                        "Your value": your_val_str,
+                        "Typical range": range_str,
+                        "Delta": delta_str,
+                    }])
+                else:
+                    metric_df = pd.DataFrame([{
+                        "Metric Name": f"{metric} ({unit})" if unit else metric,
+                        "Participant Value": p_val if p_val is not None else "N/A",
+                        "Baseline Value": b_val if b_val is not None else "N/A",
+                        "Delta (%)": f"{delta_pct:+.1f}%" if delta_pct is not None else "N/A",
+                        "Z-score": f"{z:+.2f}" if z is not None else "N/A",
+                    }])
                 st.table(metric_df)
 
                 # Actionable Recommendation
@@ -131,29 +190,37 @@ def render(result: Dict[str, Any], ctx: Dict[str, Any]) -> None:
                 )
 
                 # Audio players for this flaw
-                col_ex_p, col_ex_b = st.columns(2)
-
                 p_s = max(0.0, s - 0.3)
                 p_e = e + 0.3
-                b_start, b_end = find_baseline_interval(f, words)
-                b_s = max(0.0, b_start - 0.3)
-                b_e = b_end + 0.3
 
-                with col_ex_p:
-                    st.caption(f"**Participant Excerpt** [{p_s:.1f}s - {p_e:.1f}s]")
+                if is_benchmark:
+                    st.caption(f"**Your Flawed Segment Excerpt** [{p_s:.1f}s - {p_e:.1f}s]")
                     if p_audio and len(p_audio[0]) > 0:
                         wav_bytes = slice_to_wav_bytes(p_audio[0], p_audio[1], p_s, p_e)
                         st.audio(wav_bytes, format="audio/wav")
                     else:
                         st.caption("Audio array available when evaluated with media.")
+                else:
+                    col_ex_p, col_ex_b = st.columns(2)
+                    b_start, b_end = find_baseline_interval(f, words)
+                    b_s = max(0.0, b_start - 0.3)
+                    b_e = b_end + 0.3
 
-                with col_ex_b:
-                    st.caption(f"**Baseline Excerpt** [{b_s:.1f}s - {b_e:.1f}s]")
-                    if b_audio and len(b_audio[0]) > 0:
-                        wav_bytes_b = slice_to_wav_bytes(b_audio[0], b_audio[1], b_s, b_e)
-                        st.audio(wav_bytes_b, format="audio/wav")
-                    else:
-                        st.caption("Audio array available when evaluated with media.")
+                    with col_ex_p:
+                        st.caption(f"**Participant Excerpt** [{p_s:.1f}s - {p_e:.1f}s]")
+                        if p_audio and len(p_audio[0]) > 0:
+                            wav_bytes = slice_to_wav_bytes(p_audio[0], p_audio[1], p_s, p_e)
+                            st.audio(wav_bytes, format="audio/wav")
+                        else:
+                            st.caption("Audio array available when evaluated with media.")
+
+                    with col_ex_b:
+                        st.caption(f"**Baseline Excerpt** [{b_s:.1f}s - {b_e:.1f}s]")
+                        if b_audio and len(b_audio[0]) > 0:
+                            wav_bytes_b = slice_to_wav_bytes(b_audio[0], b_audio[1], b_s, b_e)
+                            st.audio(wav_bytes_b, format="audio/wav")
+                        else:
+                            st.caption("Audio array available when evaluated with media.")
 
     except Exception as exc:
         st.error(f"Error rendering Flaws tab: {exc}")
