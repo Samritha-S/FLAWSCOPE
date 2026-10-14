@@ -243,50 +243,54 @@ def render_top_flaws(flaws: List[Dict[str, Any]]) -> None:
 
 def render(result: Dict[str, Any], ctx: Dict[str, Any]) -> None:
     """Main render function for the Overview tab."""
-    scores = result.get("scores", {})
-    words = result.get("words", [])
-    flaws = result.get("flaws", [])
+    try:
+        scores = result.get("scores", {})
+        words = result.get("words", [])
+        flaws = result.get("flaws", [])
 
-    st.subheader("Performance Scorecard")
-    render_score_cards(scores)
+        st.subheader("Performance Scorecard")
+        render_score_cards(scores)
 
-    st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
 
-    col_chart1, col_chart2 = st.columns([1, 1])
-    with col_chart1:
-        st.markdown(
-            """
-            <div class="flawscope-card" style="height: 100%;">
-                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; color: #1F2A37;">
-                    Rubric Dimension Radar
-                </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        radar_fig = render_radar_chart(scores)
-        st.plotly_chart(radar_fig, use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        col_chart1, col_chart2 = st.columns([1, 1])
+        with col_chart1:
+            st.markdown(
+                """
+                <div class="flawscope-card" style="height: 100%;">
+                    <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; color: #1F2A37;">
+                        Rubric Dimension Radar
+                    </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            radar_fig = render_radar_chart(scores)
+            st.plotly_chart(radar_fig, use_container_width=True)
+            st.markdown("</div>", unsafe_allow_html=True)
 
-    with col_chart2:
-        st.markdown(
-            """
-            <div class="flawscope-card" style="height: 100%;">
-                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; color: #1F2A37;">
-                    Where It Went Wrong (Flaw Frequency)
-                </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        dist_fig = render_flaw_distribution_chart(flaws)
-        st.plotly_chart(dist_fig, use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        with col_chart2:
+            st.markdown(
+                """
+                <div class="flawscope-card" style="height: 100%;">
+                    <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; color: #1F2A37;">
+                        Where It Went Wrong (Flaw Frequency)
+                    </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            dist_fig = render_flaw_distribution_chart(flaws)
+            st.plotly_chart(dist_fig, use_container_width=True)
+            st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
 
-    st.markdown("### Top Critical Delivery Flaws")
-    render_top_flaws(flaws)
+        st.markdown("### Top Critical Delivery Flaws")
+        render_top_flaws(flaws)
 
-    st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
 
-    st.markdown("### Aligned Transcript Strip")
-    render_aligned_transcript_strip(words, flaws)
+        st.markdown("### Aligned Transcript Strip")
+        render_aligned_transcript_strip(words, flaws)
+    except Exception as exc:
+        st.error(f"Error rendering Overview tab: {exc}")
+
