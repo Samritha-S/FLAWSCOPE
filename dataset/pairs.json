@@ -1,1 +1,164 @@
-[]
+[
+  {
+    "pair_id": "clip01_L1_mixed",
+    "baseline": "dataset/raw/clip01.wav",
+    "participant": "dataset/generated/clip01_L1_mixed.wav",
+    "transcript": "dataset/transcripts/clip01.txt",
+    "level": 1,
+    "kind": "mixed",
+    "flaw_type": null
+  },
+  {
+    "pair_id": "clip01_L2_mixed",
+    "baseline": "dataset/raw/clip01.wav",
+    "participant": "dataset/generated/clip01_L2_mixed.wav",
+    "transcript": "dataset/transcripts/clip01.txt",
+    "level": 2,
+    "kind": "mixed",
+    "flaw_type": null
+  },
+  {
+    "pair_id": "clip01_L3_mixed",
+    "baseline": "dataset/raw/clip01.wav",
+    "participant": "dataset/generated/clip01_L3_mixed.wav",
+    "transcript": "dataset/transcripts/clip01.txt",
+    "level": 3,
+    "kind": "mixed",
+    "flaw_type": null
+  },
+  {
+    "pair_id": "clip01_L4_mixed",
+    "baseline": "dataset/raw/clip01.wav",
+    "participant": "dataset/generated/clip01_L4_mixed.wav",
+    "transcript": "dataset/transcripts/clip01.txt",
+    "level": 4,
+    "kind": "mixed",
+    "flaw_type": null
+  },
+  {
+    "pair_id": "clip01_L3_MONOTONE",
+    "baseline": "dataset/raw/clip01.wav",
+    "participant": "dataset/generated/clip01_L3_MONOTONE.wav",
+    "transcript": "dataset/transcripts/clip01.txt",
+    "level": 3,
+    "kind": "single",
+    "flaw_type": "MONOTONE"
+  },
+  {
+    "pair_id": "clip01_L3_TOO_FAST",
+    "baseline": "dataset/raw/clip01.wav",
+    "participant": "dataset/generated/clip01_L3_TOO_FAST.wav",
+    "transcript": "dataset/transcripts/clip01.txt",
+    "level": 3,
+    "kind": "single",
+    "flaw_type": "TOO_FAST"
+  },
+  {
+    "pair_id": "clip01_L3_TOO_SLOW",
+    "baseline": "dataset/raw/clip01.wav",
+    "participant": "dataset/generated/clip01_L3_TOO_SLOW.wav",
+    "transcript": "dataset/transcripts/clip01.txt",
+    "level": 3,
+    "kind": "single",
+    "flaw_type": "TOO_SLOW"
+  },
+  {
+    "pair_id": "clip01_L3_LONG_PAUSE",
+    "baseline": "dataset/raw/clip01.wav",
+    "participant": "dataset/generated/clip01_L3_LONG_PAUSE.wav",
+    "transcript": "dataset/transcripts/clip01.txt",
+    "level": 3,
+    "kind": "single",
+    "flaw_type": "LONG_PAUSE"
+  },
+  {
+    "pair_id": "clip01_L3_LOW_VOLUME",
+    "baseline": "dataset/raw/clip01.wav",
+    "participant": "dataset/generated/clip01_L3_LOW_VOLUME.wav",
+    "transcript": "dataset/transcripts/clip01.txt",
+    "level": 3,
+    "kind": "single",
+    "flaw_type": "LOW_VOLUME"
+  },
+  {
+    "pair_id": "clip01_L3_UNCLEAR_ARTICULATION",
+    "baseline": "dataset/raw/clip01.wav",
+    "participant": "dataset/generated/clip01_L3_UNCLEAR_ARTICULATION.wav",
+    "transcript": "dataset/transcripts/clip01.txt",
+    "level": 3,
+    "kind": "single",
+    "flaw_type": "UNCLEAR_ARTICULATION"
+  },
+  {
+    "pair_id": "clip02_L1_mixed",
+    "baseline": "dataset/raw/clip02.wav",
+    "participant": "dataset/generated/clip02_L1_mixed.wav",
+    "transcript": "dataset/transcripts/clip02.txt",
+    "level": 1,
+    "kind": "mixed",
+    "flaw_type": null
+  },
+  {
+    "pair_id": "clip02_L2_mixed",
+    "baseline": "dataset/raw/clip02.wav",
+    "participant": "dataset/generated/clip02_L2_mixed.wav",
+    "transcript": "dataset/transcripts/clip02.txt",
+    "level": 2,
+    "kind": "mixed",
+    "flaw_type": null
+  },
+  {
+    "pair_id": "clip02_L3_mixed",
+    "baseline": "dataset/raw/clip02.wav",
+    "participant": "dataset/generated/clip02_L3_mixed.wav",
+    "transcript": "dataset/transcripts/clip02.txt",
+    "level": 3,
+    "kind": "mixed",
+    "flaw_type": null
+  },
+  {
+    "pair_id": "clip02_L4_mixed",
+    "baseline": "dataset/raw/clip02.wav",
+    "participant": "dataset/generated/clip02_L4_mixed.wav",
+    "transcript": "dataset/transcripts/clip02.txt",
+    "level": 4,
+    "kind": "mixed",
+    "flaw_type": null
+  },
+  {
+    "pair_id": "clip03_L1_mixed",
+    "baseline": "dataset/raw/clip03.wav",
+    "participant": "dataset/generated/clip03_L1_mixed.wav",
+    "transcript": "dataset/transcripts/clip03.txt",
+    "level": 1,
+    "kind": "mixed",
+    "flaw_type": null
+  },
+  {
+    "pair_id": "clip03_L2_mixed",
+    "baseline": "dataset/raw/clip03.wav",
+    "participant": "dataset/generated/clip03_L2_mixed.wav",
+    "transcript": "dataset/transcripts/clip03.txt",
+    "level": 2,
+    "kind": "mixed",
+    "flaw_type": null
+  },
+  {
+    "pair_id": "clip03_L3_mixed",
+    "baseline": "dataset/raw/clip03.wav",
+    "participant": "dataset/generated/clip03_L3_mixed.wav",
+    "transcript": "dataset/transcripts/clip03.txt",
+    "level": 3,
+    "kind": "mixed",
+    "flaw_type": null
+  },
+  {
+    "pair_id": "clip03_L4_mixed",
+    "baseline": "dataset/raw/clip03.wav",
+    "participant": "dataset/generated/clip03_L4_mixed.wav",
+    "transcript": "dataset/transcripts/clip03.txt",
+    "level": 4,
+    "kind": "mixed",
+    "flaw_type": null
+  }
+]
