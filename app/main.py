@@ -222,7 +222,7 @@ def main():
     with tab_method:
         st.markdown("### FlawScope Rubric & Mathematical Rationale")
         st.markdown(
-            """
+            r"""
             FlawScope evaluates spoken delivery against a time-warped reference of the exact same transcript.
             
             #### 1. Flaw Detection Rules
