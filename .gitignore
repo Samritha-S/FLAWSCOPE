@@ -3,3 +3,4 @@ __pycache__/
 .venv/
 *.pyc
 dataset/raw_src/
+data/
