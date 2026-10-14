@@ -303,7 +303,11 @@ def align(
     matched_ratio = round(matched_ratio, 4)
 
     warnings: list[str] = []
-    if matched_ratio < 0.7:
+    if matched_ratio < 0.5:
+        warnings.append(
+            f"Low alignment match ratio: {matched_ratio:.1%} (< 50%). Severe transcript/audio mismatch detected. Results may be inaccurate."
+        )
+    elif matched_ratio < 0.7:
         warnings.append(
             f"Low alignment match ratio: {matched_ratio:.1%} (< 70%). Check audio clarity or transcript accuracy."
         )

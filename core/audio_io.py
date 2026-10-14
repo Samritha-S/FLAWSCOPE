@@ -7,30 +7,39 @@ import librosa
 import config
 
 
+class AudioNotFoundError(FileNotFoundError, ValueError):
+    """Raised when an audio file cannot be found."""
+    pass
+
+
 def load_audio(path: str | Path) -> tuple[np.ndarray, float]:
     """Load audio file as mono float32 ndarray resampled to config.SR.
 
+    Supports stereo, 44.1 kHz, MP3, WAV, FLAC, M4A, etc.
+
     Args:
-        path: Path to audio file (wav, mp3, m4a, flac).
+        path: Path to audio file.
 
     Returns:
         Tuple of (y: np.ndarray of float32, duration_s: float).
 
     Raises:
-        ValueError: If audio is empty or exceeds config.MAX_AUDIO_S.
-        FileNotFoundError: If the specified file does not exist.
+        AudioNotFoundError: If audio file does not exist.
+        ValueError: If audio file cannot be decoded, is empty,
+                    or exceeds config.MAX_AUDIO_S.
     """
     file_path = Path(path)
     if not file_path.exists():
-        raise FileNotFoundError(f"Audio file not found: {path}")
+        raise AudioNotFoundError(f"Audio file not found: {path}")
 
-    # librosa.load resamples to config.SR and converts to mono
-    # timestamps must strictly match original without trimming or normalization
-    y, sr = librosa.load(str(file_path), sr=config.SR, mono=True)
-    y = y.astype(np.float32)
+    try:
+        y, sr = librosa.load(str(file_path), sr=config.SR, mono=True)
+        y = y.astype(np.float32)
+    except Exception as exc:
+        raise ValueError(f"Failed to decode audio file '{file_path.name}': {exc}") from exc
 
     if len(y) == 0:
-        raise ValueError("Audio file is empty.")
+        raise ValueError(f"Audio file '{file_path.name}' is empty.")
 
     duration_s = float(len(y) / config.SR)
     if duration_s > config.MAX_AUDIO_S:
@@ -50,8 +59,12 @@ def file_sha1(path: str | Path) -> str:
     Returns:
         40-character SHA1 hex digest string.
     """
+    file_path = Path(path)
+    if not file_path.exists():
+        raise ValueError(f"File not found for hashing: {path}")
+
     hasher = hashlib.sha1()
-    with open(path, "rb") as f:
+    with open(file_path, "rb") as f:
         while chunk := f.read(65536):
             hasher.update(chunk)
     return hasher.hexdigest()
