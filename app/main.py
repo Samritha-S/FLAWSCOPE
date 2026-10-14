@@ -1,247 +1,246 @@
-"""Streamlit web dashboard for FlawScope: Counterpointing Speech Analytics."""
+"""Streamlit web dashboard entry point for FlawScope."""
 
-import json
-from pathlib import Path
+import os
+import sys
 import tempfile
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+# Add project root to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 import streamlit as st
 
-import config
-from contracts.schema import AnalysisResult
-from core.audio_io import load_audio
-from core.pipeline import analyze
-from app.ui.adapter import flaws_to_dataframe, words_to_dataframe
-from app.ui.charts import (
-    create_radar_chart,
-    create_spectrogram_figure,
-    create_timeline_figure,
+try:
+    import config
+    DEFAULT_Z_THRESH = getattr(config, "Z_THRESH", 1.5)
+except Exception:
+    DEFAULT_Z_THRESH = 1.5
+
+from app.ui import (
+    adapter,
+    tab_flaws,
+    tab_method,
+    tab_overview,
+    tab_spectrogram,
+    tab_timeline,
+    tab_validation,
+    theme,
 )
-from app.ui.components import (
-    render_flaw_cards,
-    render_score_cards,
-    render_transcript_strip,
-)
 
 
-def load_dataset_pairs() -> list[dict]:
-    """Load pre-configured speech pairs from dataset/pairs.json."""
-    pairs_file = Path("dataset/pairs.json")
-    if pairs_file.exists():
-        try:
-            with open(pairs_file, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            return []
-    return []
+def init_session_state() -> None:
+    """Initialize session state keys to maintain analysis results across reruns."""
+    if "analysis_result" not in st.session_state:
+        st.session_state["analysis_result"] = None
+    if "baseline_audio" not in st.session_state:
+        st.session_state["baseline_audio"] = None
+    if "participant_audio" not in st.session_state:
+        st.session_state["participant_audio"] = None
+    if "active_pair_id" not in st.session_state:
+        st.session_state["active_pair_id"] = None
 
 
-def main():
+def save_uploaded_file(uploaded_file, suffix: str = ".wav") -> str:
+    """Save an uploaded file to a temporary location and return its path."""
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+        tmp.write(uploaded_file.getvalue())
+        return tmp.name
+
+
+def main() -> None:
     st.set_page_config(
-        page_title="FlawScope | Speech Delivery Analytics",
-        page_icon="🎙️",
+        page_title="FlawScope - Spoken Delivery Analytics",
+        page_icon=":studio_microphone:",
         layout="wide",
         initial_sidebar_state="expanded",
     )
 
-    st.title("🎙️ FlawScope")
-    st.caption("Counterpointing Speech Analytics & Temporal Flaw Grounding")
+    theme.inject_css()
+    init_session_state()
 
-    # Sidebar
-    st.sidebar.header("Input & Configuration")
-    dataset_pairs = load_dataset_pairs()
+    is_mock_mode = os.environ.get("FLAWSCOPE_MOCK") == "1"
 
-    input_mode = st.sidebar.radio(
-        "Audio Source",
-        ["Dataset Demo Pair", "Upload Custom Audio"],
-        index=0 if dataset_pairs else 1,
-    )
+    # --- Sidebar Controls ---
+    with st.sidebar:
+        st.markdown(
+            f"""
+            <div style="display: flex; align-items: center; margin-bottom: 0.8rem;">
+                <h2 style="margin: 0; font-size: 1.4rem; color: {theme.PALETTE['ink']};">FlawScope</h2>
+                {f'<span class="mock-chip">MOCK DATA</span>' if is_mock_mode else ''}
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
-    baseline_path = None
-    participant_path = None
-    transcript_text = None
+        st.markdown("### Audio Counterpoint Selection")
 
-    if input_mode == "Dataset Demo Pair" and dataset_pairs:
-        pair_options = {
-            f"{p['pair_id']} (Level {p['level']} {p['kind']})": p
-            for p in dataset_pairs
-        }
-        selected_label = st.sidebar.selectbox("Select Contrastive Pair", list(pair_options.keys()))
-        selected_pair = pair_options[selected_label]
+        demo_pairs = adapter.list_demo_pairs()
+        pair_options = ["Upload my own"]
+        if demo_pairs:
+            pair_options = [p["pair_id"] for p in demo_pairs] + ["Upload my own"]
+        else:
+            st.info("No demo pairs found in dataset/pairs.json.")
 
-        baseline_path = selected_pair["baseline"]
-        participant_path = selected_pair["participant"]
-        transcript_file = Path(selected_pair["transcript"])
+        selected_pair_option = st.selectbox(
+            "Select Evaluation Target",
+            options=pair_options,
+            index=0 if demo_pairs else 0,
+            help="Choose a pre-generated contrastive flaw pair or upload your own recordings.",
+        )
 
-        if transcript_file.exists():
-            transcript_text = transcript_file.read_text(encoding="utf-8")
+        baseline_path: Optional[str] = None
+        participant_path: Optional[str] = None
+        transcript_text: str = ""
 
-        st.sidebar.markdown("**Baseline Audio (Reference):**")
-        st.sidebar.audio(baseline_path)
-        st.sidebar.markdown("**Participant Audio (Test):**")
-        st.sidebar.audio(participant_path)
-    else:
-        uploaded_baseline = st.sidebar.file_uploader("Upload Baseline (WAV/MP3)", type=["wav", "mp3", "flac"])
-        uploaded_participant = st.sidebar.file_uploader("Upload Participant (WAV/MP3)", type=["wav", "mp3", "flac"])
-        transcript_input = st.sidebar.text_area("Reference Transcript", height=120)
+        if selected_pair_option != "Upload my own" and demo_pairs:
+            matched = next((p for p in demo_pairs if p["pair_id"] == selected_pair_option), None)
+            if matched:
+                baseline_path = str(PROJECT_ROOT / matched["baseline"])
+                participant_path = str(PROJECT_ROOT / matched["participant"])
+                tr_file = PROJECT_ROOT / matched["transcript"]
+                if tr_file.exists():
+                    transcript_text = tr_file.read_text(encoding="utf-8").strip()
 
-        if uploaded_baseline and uploaded_participant and transcript_input:
-            t_base = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
-            t_base.write(uploaded_baseline.read())
-            baseline_path = t_base.name
+                kind = matched.get("kind", "mixed").upper()
+                level = matched.get("level", "-")
+                st.caption(f"**Kind**: `{kind}` | **Severity**: `Level {level}`")
+        else:
+            st.markdown("#### Upload Audio and Transcript")
+            b_upload = st.file_uploader("Baseline Audio (Clean Reference)", type=["wav", "mp3", "m4a"], key="b_up")
+            p_upload = st.file_uploader("Participant Audio (Target)", type=["wav", "mp3", "m4a"], key="p_up")
+            t_upload = st.file_uploader("Transcript Text File (.txt)", type=["txt"], key="t_up")
+            t_input = st.text_area("Or Paste Transcript Here", height=90, key="t_in")
 
-            t_part = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
-            t_part.write(uploaded_participant.read())
-            participant_path = t_part.name
+            if b_upload:
+                baseline_path = save_uploaded_file(b_upload, suffix=Path(b_upload.name).suffix)
+            if p_upload:
+                participant_path = save_uploaded_file(p_upload, suffix=Path(p_upload.name).suffix)
+            if t_upload:
+                transcript_text = t_upload.getvalue().decode("utf-8", errors="ignore").strip()
+            elif t_input:
+                transcript_text = t_input.strip()
 
-            transcript_text = transcript_input
-
-    # Sensitivity Slider
-    st.sidebar.markdown("---")
-    st.sidebar.subheader("Detection Sensitivity")
-    z_thresh = st.sidebar.slider(
-        "Z-Score Threshold (Z)",
-        min_value=1.0,
-        max_value=2.5,
-        value=float(config.Z_THRESH),
-        step=0.1,
-        help="Lower values increase sensitivity (detecting milder deviations); higher values flag only egregious flaws.",
-    )
-
-    analyze_btn = st.sidebar.button("🔍 Run Full Analysis", type="primary", use_container_width=True)
-
-    # State preservation for results
-    if "analysis_result" not in st.session_state:
-        st.session_state["analysis_result"] = None
-        st.session_state["last_pair"] = None
-
-    if analyze_btn and baseline_path and participant_path and transcript_text:
-        with st.spinner("Analyzing audio, aligning phonemes, and grounding flaw intervals..."):
-            try:
-                res_dict = analyze(
-                    baseline_audio=str(baseline_path),
-                    participant_audio=str(participant_path),
-                    transcript=transcript_text,
-                    config_overrides={"Z_THRESH": z_thresh},
-                )
-                st.session_state["analysis_result"] = res_dict
-                st.session_state["p_audio"] = str(participant_path)
-                st.session_state["b_audio"] = str(baseline_path)
-                st.success("Analysis complete!")
-            except Exception as e:
-                st.error(f"Analysis failed: {e}")
-
-    result_dict = st.session_state.get("analysis_result")
-
-    if not result_dict:
-        # Default prompt when no analysis has run yet
-        st.info("👈 Select a demo pair or upload audio files in the sidebar, then click **Run Full Analysis** to evaluate speech delivery.")
-        return
-
-    # Parse result into Pydantic model
-    result = AnalysisResult.model_validate(result_dict)
-
-    # Main Tabs
-    tab_overview, tab_timeline, tab_flaws, tab_spectrogram, tab_method = st.tabs(
-        ["📊 Overview", "📈 Timeline Analysis", "🚨 Flaws & Recommendations", "🌈 Spectrogram", "📖 Methodology"]
-    )
-
-    with tab_overview:
-        render_score_cards(result.scores)
-        st.markdown("---")
-
-        c_radar, c_summary = st.columns([1.2, 1])
-        with c_radar:
-            st.markdown("##### 5-Dimension Performance Radar")
-            radar_fig = create_radar_chart(result.scores)
-            st.plotly_chart(radar_fig, use_container_width=True)
-
-        with c_summary:
-            st.markdown("##### Performance Breakdown")
-            st.markdown(
-                f"- **Baseline Duration:** `{result.meta.duration_b:.2f} s`\n"
-                f"- **Participant Duration:** `{result.meta.duration_p:.2f} s`\n"
-                f"- **Baseline Alignment Match:** `{result.meta.matched_ratio_b:.1%}`\n"
-                f"- **Participant Alignment Match:** `{result.meta.matched_ratio_p:.1%}`\n"
-                f"- **Total Detected Flaws:** `{len(result.flaws)}`\n"
-                f"- **Processing Time:** `{result.meta.timings_s.get('total', 0):.2f} s`"
+        # Advanced Settings Expander
+        with st.expander("Advanced Detection Settings", expanded=False):
+            z_threshold = st.slider(
+                "Sensitivity Threshold (Z-score)",
+                min_value=1.0,
+                max_value=3.0,
+                value=float(DEFAULT_Z_THRESH),
+                step=0.1,
+                help="Lower values increase detector sensitivity (more flaws detected); higher values require larger deviations.",
             )
 
-            # Flaw types count
-            if result.flaws:
-                from collections import Counter
-                counts = Counter(f.type.value for f in result.flaws)
-                count_str = ", ".join(f"`{k}: {v}`" for k, v in counts.items())
-                st.markdown(f"**Flaws by Category:** {count_str}")
-
-        render_transcript_strip(result.words, result.flaws)
-
-    with tab_timeline:
-        st.markdown("##### Synchronized Participant vs Baseline Acoustics")
-        st.caption(
-            "Solid ink line = Participant | Dashed grey line = Warped Baseline | Shaded regions = Delivery flaws"
-        )
-        timeline_fig = create_timeline_figure(result.curves, result.flaws, result.words)
-        st.plotly_chart(timeline_fig, use_container_width=True)
-
-    with tab_flaws:
-        render_flaw_cards(result.flaws)
+        st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
+        analyze_clicked = st.button("Analyze Spoken Delivery", type="primary", use_container_width=True)
 
         st.markdown("---")
-        st.markdown("##### Flaw Records Table")
-        df_flaws = flaws_to_dataframe(result.flaws)
-        if not df_flaws.empty:
-            st.dataframe(df_flaws, use_container_width=True)
-
-            col_dl1, col_dl2 = st.columns(2)
-            with col_dl1:
-                st.download_button(
-                    "📥 Download Flaws CSV",
-                    df_flaws.to_csv(index=False),
-                    "flawscope_flaws.csv",
-                    "text/csv",
-                    use_container_width=True,
-                )
-            with col_dl2:
-                st.download_button(
-                    "📥 Download Full Result JSON",
-                    json.dumps(result_dict, indent=2),
-                    "flawscope_analysis.json",
-                    "application/json",
-                    use_container_width=True,
-                )
-
-    with tab_spectrogram:
-        st.markdown("##### Log-Mel Spectrogram")
-        p_audio_path = st.session_state.get("p_audio")
-        if p_audio_path and Path(p_audio_path).exists():
-            y_p, sr_p = load_audio(p_audio_path)
-            spec_fig = create_spectrogram_figure(y_p, sr_p, result.flaws)
-            st.plotly_chart(spec_fig, use_container_width=True)
-        else:
-            st.info("Spectrogram available when audio file path is accessible.")
-
-    with tab_method:
-        st.markdown("### FlawScope Rubric & Mathematical Rationale")
         st.markdown(
-            r"""
-            FlawScope evaluates spoken delivery against a time-warped reference of the exact same transcript.
-            
-            #### 1. Flaw Detection Rules
-            - **MONOTONE**: Pitch variation ($\sigma$ of $F_0$ in semitones relative to median) over a 5-word window. Flagged when deviation $d = (m_p - m_b) / s_b \le -Z$.
-            - **TOO_FAST / TOO_SLOW**: Syllables per second speech rate over word-matched windows. Flagged when $d \ge +Z$ (fast) or $d \le -Z$ (slow).
-            - **LOW_VOLUME**: Mean loudness relative to median speech level. Flagged when $d \le -Z$ and absolute drop $\ge 4.0\\text{ dB}$.
-            - **LONG_PAUSE**: Unintended hesitation between adjacent words where $gap_p \ge 0.9\\text{s}$ and $(gap_p - gap_b) \ge 0.5\\text{s}$.
-            - **UNCLEAR_ARTICULATION**: Spectral divergence via Euclidean DTW of MFCCs. Flagged when robust $Z_c = (\\text{cost} - \\text{median}) / (1.4826 \\times \\text{MAD}) \ge Z + 0.5$.
-            
-            #### 2. Rubric Scoring Formulation
-            For each dimension $d$:
-            $$\\text{penalty}_d = \\frac{\\sum_{i \\in d} (\\text{severity}_i \\times \\text{duration}_i)}{T_{\\text{speech}}}$$
-            $$\\text{score}_d = 100 \\times \\exp(-3.0 \\times \\text{penalty}_d)$$
-            Overall score is a weighted linear combination:
-            $$\\text{Overall} = 0.25 \\times \\text{pace} + 0.25 \\times \\text{intonation} + 0.15 \\times \\text{volume} + 0.15 \\times \\text{pausing} + 0.20 \\times \\text{clarity}$$
             """
+            <div class="caption-sm" style="text-align: center;">
+                FlawScope Prototype | Phase B2<br/>
+                Signal Processing and Temporal Grounding
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
-        st.markdown("#### Live Configuration Snapshot")
-        st.json(result.meta.config)
+
+    # Trigger analysis on button click or if no result yet in mock mode
+    if analyze_clicked:
+        if not is_mock_mode and (not baseline_path or not participant_path or not transcript_text):
+            st.error("Please provide baseline audio, participant audio, and transcript before analyzing.")
+        else:
+            with st.spinner("Aligning audio waveforms and analyzing delivery metrics..."):
+                try:
+                    overrides = {"Z_THRESH": z_threshold}
+                    result = adapter.get_result(
+                        baseline_path=baseline_path or "",
+                        participant_path=participant_path or "",
+                        transcript_text=transcript_text,
+                        overrides=overrides,
+                    )
+                    st.session_state["analysis_result"] = result
+                    st.session_state["active_pair_id"] = selected_pair_option
+
+                    # Load audio arrays for playback and timeline caching
+                    if participant_path and Path(participant_path).exists():
+                        y_p, sr_p = adapter.load_audio_for_ui(participant_path)
+                        st.session_state["participant_audio"] = (y_p, sr_p)
+                    if baseline_path and Path(baseline_path).exists():
+                        y_b, sr_b = adapter.load_audio_for_ui(baseline_path)
+                        st.session_state["baseline_audio"] = (y_b, sr_b)
+
+                    st.toast("Analysis completed successfully!")
+                except Exception as exc:
+                    st.error(
+                        f"Analysis failed: {exc}\n\n"
+                        "Hint: Check audio file formats or run with FLAWSCOPE_MOCK=1 to verify UI rendering."
+                    )
+
+    # --- Header ---
+    st.markdown(
+        f"""
+        <div style="margin-bottom: 1.2rem;">
+            <h1 style="margin: 0; font-size: 2.1rem; color: {theme.PALETTE['ink']};">
+                FlawScope
+            </h1>
+            <div style="font-size: 1.05rem; color: #4B5563; margin-top: 0.2rem;">
+                Counterpointing speech analytics and temporal flaw grounding against reference spoken deliveries.
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # --- Main Content Tabs ---
+    result = st.session_state.get("analysis_result")
+    ctx = {
+        "baseline_audio": st.session_state.get("baseline_audio"),
+        "participant_audio": st.session_state.get("participant_audio"),
+        "pair_id": st.session_state.get("active_pair_id"),
+        "is_mock": is_mock_mode,
+    }
+
+    if result is None:
+        st.markdown(
+            """
+            <div class="flawscope-card" style="text-align: center; padding: 3rem 1rem;">
+                <h3 style="margin-bottom: 0.4rem; color: #1F2A37;">Ready for Speech Performance Analysis</h3>
+                <p style="color: #6B7280; max-width: 580px; margin: 0 auto 1.5rem auto; line-height: 1.5;">
+                    Select a contrastive evaluation pair or upload your own spoken audio in the sidebar,
+                    then click <strong>Analyze Spoken Delivery</strong> to extract pitch, cadence, pausing, and clarity metrics.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        return
+
+    # Tabs container
+    tabs = st.tabs([
+        "Overview",
+        "Timeline",
+        "Flaws",
+        "Spectrogram",
+        "Validation",
+        "Method",
+    ])
+
+    with tabs[0]:
+        tab_overview.render(result, ctx)
+    with tabs[1]:
+        tab_timeline.render(result, ctx)
+    with tabs[2]:
+        tab_flaws.render(result, ctx)
+    with tabs[3]:
+        tab_spectrogram.render(result, ctx)
+    with tabs[4]:
+        tab_validation.render(result, ctx)
+    with tabs[5]:
+        tab_method.render(result, ctx)
 
 
 if __name__ == "__main__":

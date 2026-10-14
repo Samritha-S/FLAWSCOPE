@@ -1,0 +1,3 @@
+@echo off
+echo Starting FlawScope Dashboard...
+streamlit run app/main.py

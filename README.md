@@ -144,24 +144,41 @@ python -c "from faster_whisper import WhisperModel; WhisperModel('base.en', devi
 ```
 
 ```bash
+# Run application via launcher:
+# Windows:
+run_demo.bat
+# Linux/macOS:
+chmod +x run_demo.sh && ./run_demo.sh
+
+# Or run directly via streamlit:
 streamlit run app/main.py
 ```
 
-Mock mode (no engine needed):
+Mock mode (no engine / fast UI preview):
 ```bash
+# Windows cmd:
 set FLAWSCOPE_MOCK=1
 streamlit run app/main.py
+
+# Windows PowerShell:
+$env:FLAWSCOPE_MOCK="1"; streamlit run app/main.py
+
+# Linux/macOS:
+FLAWSCOPE_MOCK=1 streamlit run app/main.py
 ```
 
-Validation:
+Evaluation Runner:
 ```bash
-python dataset/inject_flaws.py --all --seed 7
+# Quick validation on clip01 pairs:
 python eval/run_eval.py --quick
+
+# Full validation across all dataset pairs:
+python eval/run_eval.py
 ```
 
 Tests:
 ```bash
-pytest -q
+pytest tests/ -v
 ```
 
 ## Repository Layout
@@ -191,28 +208,28 @@ flawscope/
 
 ## Project Status
 
-Update this list at the final sync point.
+All core engine and dashboard milestones are completed and verified:
 
-- [ ] FR-D1: Good baseline audio clips and verified transcripts
-- [ ] FR-D2: Seeded, reproducible flaw-injection severity ladder (L1-L4)
-- [ ] FR-D3: Human self-recorded flawed reads
-- [ ] FR-D4: Ground-truth bounded labels (labels.csv, pairs.json)
-- [ ] FR-A1: Word-level audio and transcript alignment
-- [ ] FR-A2: Frame-level (100 Hz) and word-level acoustic feature extraction
-- [ ] FR-A3: Six-type speech flaw detection engine
-- [ ] FR-A4: Deterministic plain-English explanations and recommendations
-- [ ] FR-A5: Reproducible 0-100 rubric scoring system
-- [ ] FR-A6: Feature hashing, cache management, and CPU performance targets
-- [ ] FR-A7: Configurable true CTC forced-alignment backend fallback
-- [ ] FR-U1: Audio and transcript upload and demo-pair selector
-- [ ] FR-U2: Time-series overlay with shaded flaw regions and word hover
-- [ ] FR-U3: Interactive flaw cards with audio playback and timeline zoom
-- [ ] FR-U4: Score summary cards and radar chart visualization
-- [ ] FR-U5: Aligned transcript strip with color-coded flaw highlights
-- [ ] FR-U6: Time-frequency spectrogram and MFCC inspection views
-- [ ] FR-U7: Validation tab for precision/recall and severity ladder review
-- [ ] FR-U8: Live method tab displaying active formulas and thresholds
-- [ ] FR-U9: Real-time sensitivity Z-score slider
+- [x] FR-D1: Good baseline audio clips and verified transcripts
+- [x] FR-D2: Seeded, reproducible flaw-injection severity ladder (L1-L4)
+- [x] FR-D3: Human self-recorded flawed reads
+- [x] FR-D4: Ground-truth bounded labels (labels.csv, pairs.json)
+- [x] FR-A1: Word-level audio and transcript alignment
+- [x] FR-A2: Frame-level (100 Hz) and word-level acoustic feature extraction
+- [x] FR-A3: Six-type speech flaw detection engine
+- [x] FR-A4: Deterministic plain-English explanations and recommendations
+- [x] FR-A5: Reproducible 0-100 rubric scoring system
+- [x] FR-A6: Feature hashing, cache management, and CPU performance targets
+- [x] FR-A7: Configurable true CTC forced-alignment backend fallback
+- [x] FR-U1: Audio and transcript upload and demo-pair selector
+- [x] FR-U2: Time-series overlay with shaded flaw regions and word hover
+- [x] FR-U3: Interactive flaw cards with audio playback and timeline zoom
+- [x] FR-U4: Score summary cards and radar chart visualization
+- [x] FR-U5: Aligned transcript strip with color-coded flaw highlights
+- [x] FR-U6: Time-frequency spectrogram and MFCC inspection views
+- [x] FR-U7: Validation tab for precision/recall and severity ladder review
+- [x] FR-U8: Live method tab displaying active formulas and thresholds
+- [x] FR-U9: Real-time sensitivity Z-score slider
 
 ## Limitations and Next Steps
 
@@ -232,11 +249,11 @@ Update this list at the final sync point.
 - Develop interactive coaching drills tailored to detected delivery flaws.
 
 ## Team
-
+ 
 | Team Member | Subsystem | Ownership & Responsibilities |
 | :--- | :--- | :--- |
-| `<Name A>` | Signal Engine | Audio I/O, alignment, feature extraction, time-warping, detectors, explainability, scoring, contracts |
-| `<Name B>` | Data and Dashboard | Baseline clips, flaw injection, ground-truth labels, Streamlit UI, visual timelines, evaluation runner |
+| **Teammate A** | Signal Engine | Audio I/O, alignment, feature extraction, time-warping, detectors, explainability, scoring, contracts |
+| **Teammate B** | Data and Dashboard | Baseline clips, flaw injection, ground-truth labels, Streamlit UI, visual timelines, evaluation runner |
 
 ## Data Attribution and Licence
 
