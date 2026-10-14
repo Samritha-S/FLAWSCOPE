@@ -1,0 +1,12 @@
+streamlit
+plotly
+numpy
+scipy
+pandas
+librosa
+soundfile
+praat-parselmouth
+faster-whisper
+pydantic>=2
+pytest
+tqdm
