@@ -180,7 +180,7 @@ def render_pair_timeline_comparison(pair_data: Dict[str, Any]) -> go.Figure:
                 y=["Detected"],
                 base=[s],
                 orientation="h",
-                marker=dict(color=color, line=dict(color="#1F2A37", width=1, dash="dot")),
+                marker=dict(color=color, line=dict(color="#1F2A37", width=1.5)),
                 name=ft,
                 showlegend=False,
                 hovertemplate=f"Detected: {ft}<br>Interval: {s:.2f}s - {e:.2f}s<extra></extra>",

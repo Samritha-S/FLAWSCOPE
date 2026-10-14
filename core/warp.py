@@ -86,6 +86,12 @@ def warp_baseline(
     t_b = np.array(time_map(t_p), dtype=np.float64)
 
     N_b = len(frames_b["f0_st"])
+    if N_b == 0:
+        return {
+            "f0_st": np.full(len(t_p), np.nan, dtype=np.float32),
+            "rms_db_rel": np.zeros(len(t_p), dtype=np.float32),
+        }
+
     t_b_grid = np.arange(N_b, dtype=np.float64) * config.HOP_S
 
     # Linear interpolation for rms_db_rel

@@ -239,13 +239,14 @@ def detect_flaws(
                     "m_b": mb,
                 })
 
-    # 5. Flag rule: LOW_VOLUME (d <= -Z and (m_b - m_p) >= VOLUME_MIN_DROP_DB)
+    # 5. Flag rule: LOW_VOLUME (d <= -Z_vol and (m_b - m_p) >= VOLUME_MIN_DROP_DB)
+    z_vol_thresh = conf.get("VOLUME_Z_THRESH", z_thresh)
     if len(m_b_vol) > 0:
         s_b_vol = max(float(np.std(m_b_vol)), spread_floor["LOW_VOLUME"])
         for idx, mp, mb in zip(vol_indices, m_p_vol, m_b_vol):
             d = (mp - mb) / s_b_vol
-            if d <= -z_thresh and (mb - mp) >= volume_min_drop_db:
-                sev = float(np.clip(abs(d) / (2.0 * z_thresh), 0.0, 1.0))
+            if d <= -z_vol_thresh and (mb - mp) >= volume_min_drop_db:
+                sev = float(np.clip(abs(d) / (2.0 * z_vol_thresh), 0.0, 1.0))
                 flagged_by_type[FlawType.LOW_VOLUME].append({
                     "word_idx": idx,
                     "d": d,
@@ -280,7 +281,7 @@ def detect_flaws(
                     "m_b": med_cost,
                 })
 
-    # 7. Flag rule: LONG_PAUSE (per word gap, not windowed)
+    # 7. Flag rule: LONG_PAUSE (per word gap and smeared word duration)
     for idx in range(1, n_words):
         w_cur = words[idx]
         w_prev = words[idx - 1]
@@ -304,6 +305,33 @@ def detect_flaws(
                     "severity": sev,
                     "m_p": gap_p,
                     "m_b": gap_b,
+                })
+
+    pause_word_dur_delta = conf.get("LONG_PAUSE_WORD_DUR_DELTA_S", 1.0)
+    for idx in range(n_words):
+        w_cur = words[idx]
+        if not (w_cur.matched_p and w_cur.matched_b):
+            continue
+        p_dur = word_feats[idx].p.dur or 0.0
+        b_dur = word_feats[idx].b.dur or 0.0
+        if (p_dur - b_dur) >= pause_word_dur_delta and w_cur.p_start is not None and w_cur.p_end is not None:
+            p_i0 = int(round(w_cur.p_start / hop_s))
+            p_i1 = int(round(w_cur.p_end / hop_s))
+            f0_slice = frames_p["f0_st"][p_i0:p_i1]
+            unvoiced_ratio = float(np.mean(np.isnan(f0_slice))) if len(f0_slice) > 0 else 0.0
+            if unvoiced_ratio >= 0.3:
+                sev = float(np.clip((p_dur - b_dur) / long_pause_scale, 0.0, 1.0))
+                d = (p_dur - b_dur) / long_pause_delta_s
+                flagged_by_type[FlawType.LONG_PAUSE].append({
+                    "word_idx": idx,
+                    "word_start_idx": idx,
+                    "word_end_idx": idx,
+                    "start": float(w_cur.p_start),
+                    "end": float(w_cur.p_end),
+                    "d": d,
+                    "severity": sev,
+                    "m_p": p_dur,
+                    "m_b": b_dur,
                 })
 
     # 8. Region building: merge flagged words whose indices differ by <= MERGE_GAP_WORDS
