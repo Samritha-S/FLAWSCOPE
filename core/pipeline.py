@@ -1,4 +1,4 @@
-"""Main execution pipeline for FlawScope audio alignment, features, and analysis."""
+"""Main execution pipeline for FlawScope audio alignment, features, detection, and scoring."""
 
 import argparse
 import json
@@ -7,7 +7,6 @@ import os
 from pathlib import Path
 import time
 from typing import Any
-import numpy as np
 
 import config
 from contracts.schema import (
@@ -15,14 +14,16 @@ from contracts.schema import (
     CurveSet,
     Curves,
     Meta,
-    Scores,
     SideFeat,
     Word,
     WordFeat,
 )
 from core.alignment import align
 from core.audio_io import file_sha1, load_audio
+from core.detectors import detect_flaws
+from core.explain import explain_flaws
 from core.features import frame_features, word_features
+from core.scoring import compute_scores
 from core.warp import build_time_map, rate_curve, warp_baseline
 
 
@@ -53,8 +54,8 @@ def analyze(
 ) -> dict:
     """Analyze spoken performance against a baseline reference.
 
-    Extracts features, time-warps baseline to participant timeline, and produces
-    validated AnalysisResult payload.
+    Extracts features, time-warps baseline to participant timeline, detects flaws,
+    generates causal explanations, and computes rubric scores.
 
     Args:
         baseline_audio: Path to reference baseline audio file.
@@ -179,7 +180,7 @@ def analyze(
     rate_b = rate_curve(words, "b", t_p_grid, word_feats)
     t_warp = time.time() - t0
 
-    # --- Stage (e): Assemble Curves and Meta ---
+    # Assemble Curves
     curves = Curves(
         t=t_p_grid,
         p=CurveSet(
@@ -194,16 +195,31 @@ def analyze(
         ),
     )
 
+    # --- Stage (e): Detect Delivery Flaws ---
+    t0 = time.time()
+    raw_flaws = detect_flaws(words, word_feats, frames_p, frames_b, config_overrides)
+    t_detect = time.time() - t0
+
+    # --- Stage (f): Explain and Score ---
+    t0 = time.time()
+    flaws = explain_flaws(raw_flaws, words)
+    scores = compute_scores(flaws, word_feats, config_overrides)
+    t_explain_score = time.time() - t0
+
     t_total = time.time() - t_start_total
     timings_s = {
         "load": round(t_load, 3),
         "align": round(t_align, 3),
         "features": round(t_features, 3),
         "warp": round(t_warp, 3),
-        "detect": 0.0,
-        "explain_score": 0.0,
+        "detect": round(t_detect, 3),
+        "explain_score": round(t_explain_score, 3),
         "total": round(t_total, 3),
     }
+
+    effective_config = config.snapshot()
+    if config_overrides:
+        effective_config.update(config_overrides)
 
     meta = Meta(
         baseline_file=Path(baseline_audio).name,
@@ -213,19 +229,9 @@ def analyze(
         align_backend=config.ALIGN_BACKEND,
         matched_ratio_b=ratio_b,
         matched_ratio_p=ratio_p,
-        config=config.snapshot(),
+        config=effective_config,
         timings_s=timings_s,
         warnings=warns_b + warns_p,
-    )
-
-    # --- Stage (f): Placeholder flaws & scores for Phase A2 ---
-    scores = Scores(
-        overall=100.0,
-        pace=100.0,
-        intonation=100.0,
-        volume=100.0,
-        pausing=100.0,
-        clarity=100.0,
     )
 
     result = AnalysisResult(
@@ -233,7 +239,7 @@ def analyze(
         words=words,
         word_feats=word_feats,
         curves=curves,
-        flaws=[],
+        flaws=flaws,
         scores=scores,
     )
 
@@ -270,7 +276,9 @@ def main():
         print(f"  - {stage:<13} {t:>6.3f}s")
     print(f"\nOverall Score: {result_dict['scores']['overall']}")
     print(f"Flaws Detected: {len(result_dict['flaws'])}")
-    print(f"Output saved to: {out_path.resolve()}\n")
+    for f in result_dict["flaws"]:
+        print(f"  [{f['id']}] {f['type']:<20} {f['start']:>5.2f}s - {f['end']:>5.2f}s  sev={f['severity']:.2f}  {f['explanation'][:65]}...")
+    print(f"\nOutput saved to: {out_path.resolve()}\n")
 
 
 if __name__ == "__main__":
