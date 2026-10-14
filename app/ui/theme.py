@@ -179,6 +179,18 @@ def inject_css() -> None:
         margin-right: 0.35rem;
     }}
 
+    /* Coral st.warning banner */
+    .coral-alert div[data-testid="stAlert"] {{
+        background-color: rgba(255, 107, 91, 0.12) !important;
+        border: 1px solid rgba(255, 107, 91, 0.3) !important;
+        border-left: 5px solid #FF6B5B !important;
+        color: #1F2A37 !important;
+    }}
+    .coral-alert div[data-testid="stAlert"] svg {{
+        color: #FF6B5B !important;
+        fill: #FF6B5B !important;
+    }}
+
     /* Responsive adjustments */
     @media (max-width: 768px) {{
         .score-large {{

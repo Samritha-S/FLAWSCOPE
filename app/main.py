@@ -41,6 +41,19 @@ def init_session_state() -> None:
         st.session_state["participant_audio"] = None
     if "active_pair_id" not in st.session_state:
         st.session_state["active_pair_id"] = None
+    if "comparison_mode" not in st.session_state:
+        st.session_state["comparison_mode"] = "Strict (same speaker or ideal reference)"
+    if "re_analyze" not in st.session_state:
+        st.session_state["re_analyze"] = False
+    if "last_inputs" not in st.session_state:
+        st.session_state["last_inputs"] = {}
+
+
+def _switch_to_style_tolerant() -> None:
+    """Callback to switch comparison mode to style-tolerant and trigger re-analysis."""
+    st.session_state["comparison_mode"] = "Style-tolerant (different speaker)"
+    st.session_state["pending_mode_change"] = "Style-tolerant (different speaker)"
+    st.session_state["re_analyze"] = True
 
 
 def save_uploaded_file(uploaded_file, suffix: str = ".wav") -> str:
@@ -60,6 +73,9 @@ def main() -> None:
 
     theme.inject_css()
     init_session_state()
+
+    if "pending_mode_change" in st.session_state:
+        st.session_state["comparison_mode"] = st.session_state.pop("pending_mode_change")
 
     is_mock_mode = os.environ.get("FLAWSCOPE_MOCK") == "1"
 
@@ -123,6 +139,8 @@ def main() -> None:
             elif t_input:
                 transcript_text = t_input.strip()
 
+            st.caption("For best results, read the same transcript as the reference.")
+
         # Advanced Settings Expander
         with st.expander("Advanced Detection Settings", expanded=False):
             z_threshold = st.slider(
@@ -133,6 +151,18 @@ def main() -> None:
                 step=0.1,
                 help="Lower values increase detector sensitivity (more flaws detected); higher values require larger deviations.",
             )
+
+            comp_mode = st.radio(
+                "Comparison mode",
+                options=[
+                    "Strict (same speaker or ideal reference)",
+                    "Style-tolerant (different speaker)",
+                ],
+                key="comparison_mode",
+                help="Tolerant mode ignores overall speed and pitch-range differences between speakers, so a flaw spread over the whole recording is harder to see.",
+            )
+
+        is_speaker_tolerant = comp_mode == "Style-tolerant (different speaker)"
 
         st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
         analyze_clicked = st.button("Analyze Spoken Delivery", type="primary", use_container_width=True)
@@ -148,14 +178,27 @@ def main() -> None:
             unsafe_allow_html=True,
         )
 
-    # Trigger analysis on button click or if no result yet in mock mode
-    if analyze_clicked:
+    # Trigger analysis on button click or if re-analysis requested
+    re_analyze = st.session_state.pop("re_analyze", False)
+    if analyze_clicked or re_analyze:
+        # If re-analyzing and inputs are empty, restore from last_inputs
+        last_inputs = st.session_state.get("last_inputs", {})
+        if not baseline_path and last_inputs.get("baseline_path"):
+            baseline_path = last_inputs["baseline_path"]
+        if not participant_path and last_inputs.get("participant_path"):
+            participant_path = last_inputs["participant_path"]
+        if not transcript_text and last_inputs.get("transcript_text"):
+            transcript_text = last_inputs["transcript_text"]
+
         if not is_mock_mode and (not baseline_path or not participant_path or not transcript_text):
             st.error("Please provide baseline audio, participant audio, and transcript before analyzing.")
         else:
             with st.spinner("Aligning audio waveforms and analyzing delivery metrics..."):
                 try:
-                    overrides = {"Z_THRESH": z_threshold}
+                    overrides = {
+                        "Z_THRESH": z_threshold,
+                        "SPEAKER_TOLERANT": is_speaker_tolerant,
+                    }
                     result = adapter.get_result(
                         baseline_path=baseline_path or "",
                         participant_path=participant_path or "",
@@ -164,6 +207,11 @@ def main() -> None:
                     )
                     st.session_state["analysis_result"] = result
                     st.session_state["active_pair_id"] = selected_pair_option
+                    st.session_state["last_inputs"] = {
+                        "baseline_path": baseline_path,
+                        "participant_path": participant_path,
+                        "transcript_text": transcript_text,
+                    }
 
                     # Load audio arrays for playback and timeline caching
                     if participant_path and Path(participant_path).exists():
@@ -218,6 +266,28 @@ def main() -> None:
             unsafe_allow_html=True,
         )
         return
+
+    # Check for speaker warning in result.meta.warnings
+    meta = result.get("meta", {})
+    warnings = meta.get("warnings", []) if isinstance(meta, dict) else getattr(meta, "warnings", [])
+    speaker_warning = next(
+        (w for w in warnings if "different speaker likely" in str(w).lower()),
+        None,
+    )
+    if speaker_warning:
+        col_warn, col_btn = st.columns([3.6, 1.4])
+        with col_warn:
+            st.markdown('<div class="coral-alert">', unsafe_allow_html=True)
+            st.warning(str(speaker_warning))
+            st.markdown("</div>", unsafe_allow_html=True)
+        with col_btn:
+            st.markdown("<div style='height: 0.35rem;'></div>", unsafe_allow_html=True)
+            st.button(
+                "Re-run in style-tolerant mode",
+                type="primary",
+                on_click=_switch_to_style_tolerant,
+                use_container_width=True,
+            )
 
     # Tabs container
     tabs = st.tabs([
